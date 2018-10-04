@@ -2,6 +2,7 @@ import React from 'react';
 import {
   DragSource,
   DropTarget,
+  ConnectDragPreview
  } from 'react-dnd';
 import { findDOMNode } from 'react-dom';
 import { XYCoord } from 'dnd-core';
@@ -16,6 +17,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Button from '@material-ui/core/Button';
+import { getEmptyImage } from 'react-dnd-html5-backend'
 
 // Drag sources and drop targets only interact
 // if they have the same string type.
@@ -74,6 +76,14 @@ class PumpCard extends React.Component {
   standbytoggle: PropTypes.func.isRequired,
   tostandby:PropTypes.bool.isRequired
 }
+
+  componentDidMount(){
+    const img = new Image()
+    img.onload = () =>
+      this.props.connectDragPreview && this.props.connectDragPreview(img)
+      img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAZhJREFUaN7tmEFKw0AUhj+t1pWV6gnctvUO7gRXhVIv4SHMBZQUih7FhSLeoQrdWm9Qu5KUupgUyjOFlHkvyUB+mEWgzHzf5CXzUqhTp45PorIBfOFXZUP4wgcpsAkfnICED0ogCz4YgW3wGmMBfAAx0AsNXo4EGAPNvHD7FsYeaQC3wHNeiUaO37wDe8BlgSLnQDsVUUuEzUN8DPSBKf/Lqau9M1kSWmkDMzH3g7ZAloRmhmLuiYWAlNBMSwjMrQQ2JTRzsqvAgaeAdq7E9ZfBGmY5A74p4CHWTgu4yYBPgI7FghfACNe/LLBrK0ba4EfAI7A0hF6PF+BQG/6tAPAk3XlVeIAnQ+gf3IF1j2HNy7KZAQNcH1P5xBnwp2VD7ZJPITBQnj+yFpgLAe2yWVlLFCFgKiFLqG8kYCYRi0WmuI8PCwETiR7ugJFvoiGuj9EWMJEYY3eQbRuqEk3gtYoSef8X+gWu0zux1NyZMtLFfWhMcH1MECVkmSz4u7KhfASCgpcCwcFvCgQJvxYIFh4CetvUqVPF/AFam4FIxrxyCwAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxOC0xMC0wNFQyMTo0NTozOSswMDowMANz6dAAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTgtMTAtMDRUMjE6NDU6MzkrMDA6MDByLlFsAAAAKHRFWHRzdmc6YmFzZS11cmkAZmlsZTovLy90bXAvbWFnaWNrLWViTXhCclZPu/nMewAAAABJRU5ErkJggg=='
+  }
+
 
   render() {
     const { classes } = this.props
@@ -142,6 +152,7 @@ export default flow(
     (connect, monitor) => ({
       connectDragSource: connect.dragSource(),
       isDragging: monitor.isDragging(),
+      connectDragPreview: connect.dragPreview(),
     }),
   ),
   DropTarget((props) =>  {console.log(props); return('card-' + props.type)}, cardTarget, (connect) => ({
