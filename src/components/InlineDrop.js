@@ -62,7 +62,7 @@ class InlineDrop extends Component {
 }
 
 export default flow(
-  DropTarget('card', addTarget, (connect) => ({
+  DropTarget((props) =>  ('card-' + props.type), addTarget, (connect) => ({
     connectDropTarget: connect.dropTarget()
   })),
   withStyles(styles))(InlineDrop)

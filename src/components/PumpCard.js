@@ -11,13 +11,18 @@ import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import Button from '@material-ui/core/Button';
 
 // Drag sources and drop targets only interact
 // if they have the same string type.
 // You want to keep types in a separate file with
 // the rest of your app's constants.
-const Types = {
-  CARD: 'card'
+function types (props) {
+  return {CARD: 'card-' + props.type }
 };
 
 const styles = theme => ({
@@ -28,9 +33,9 @@ const styles = theme => ({
     padding: theme.spacing.unit / 2,
   },
   chip: {
-    marginLeft: 10,
+    marginRight: 30,
     marginTop: 5
-  },
+  }
 });
 
 const cardSource = {
@@ -53,7 +58,6 @@ drop(props, monitor, component) {
     const dragId = monitor.getItem().id
     const hoverIndex = props.index
     const dragstandby = monitor.getItem().standby
-    console.log(dragstandby)
     props.moveCard(dragId, hoverIndex, dragstandby)
   },
 }
@@ -84,15 +88,45 @@ class PumpCard extends React.Component {
       connectDropTarget &&
         connectDragSource(
               connectDropTarget(
-              <div style={styles.root}>
-                <Chip
-                  avatar={<Avatar>{this.props.inlineindex}</Avatar>}
-                  key={this.props.key}
-                  label={this.props.text}
-                  className={classes.chip}
-                  standbytoggle={this.props.standbyToggle}
-                  tostandby={this.props.toStandby}
-                />
+              <div style={styles.root} className='mt-2'>
+                <ExpansionPanel>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Chip
+                    avatar={<Avatar>{this.props.inlineindex}</Avatar>}
+                    key={this.props.key}
+                    label={this.props.text}
+                    className={classes.chip}
+                    standbytoggle={this.props.standbyToggle}
+                    tostandby={this.props.toStandby}
+                  />
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails className='d-block'>
+                <div>
+                  <Typography variant='title'>
+                    Recent Maintenance
+                  </Typography>
+                </div>
+                <div>
+                <Typography variant='body2'>
+                  V&S Hole 2
+                </Typography>
+                </div>
+                <div>
+                <Typography variant='title'>
+                  Recent Movement
+                </Typography>
+                </div>
+                <div>
+                <Typography variant='body2'>
+                  Moved to Red Crew on Oct 11 14:00
+                </Typography>
+                </div>
+                <div className='row'>
+                  <Button className='col-6'>Send</Button>
+                  <Button color="primary" className='col-6'>Log Maintenance</Button>
+                </div>
+              </ExpansionPanelDetails>
+              </ExpansionPanel>
             </div>
           )
 
@@ -103,14 +137,14 @@ class PumpCard extends React.Component {
 
 export default flow(
   DragSource(
-    'card',
+    (props) =>  ('card-' + props.type),
     cardSource,
     (connect, monitor) => ({
       connectDragSource: connect.dragSource(),
       isDragging: monitor.isDragging(),
     }),
   ),
-  DropTarget('card', cardTarget, (connect) => ({
+  DropTarget((props) =>  {console.log(props); return('card-' + props.type)}, cardTarget, (connect) => ({
     connectDropTarget: connect.dropTarget(),
   })),
   withStyles(styles)

@@ -7,8 +7,12 @@ import { withStyles } from '@material-ui/core/styles';
 import flow from 'lodash/flow';
 import InlineDrop from './InlineDrop'
 import { connect } from 'react-redux'
-import { transitionPump, transferPump } from '../actions/pumps'
+import { transitionEquipment, transferEquipment } from '../actions/equipment'
 import CircularProgress from '@material-ui/core/CircularProgress';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 
 
 
@@ -21,7 +25,8 @@ const styles = theme => ({
     justifyContent: 'center',
     flexWrap: 'wrap',
     padding: theme.spacing.unit / 2,
-    minHeight: 85
+    minHeight: 85,
+    marginRight:40,
   },
 });
 
@@ -46,7 +51,7 @@ class EquipmentCategory extends Component {
 
   addCard = (dragId) => {
     const { dispatch } = this.props
-    const dragIndex = this.props.pumps.findIndex(x => x.text === dragId)
+    const dragIndex = this.props.equipment.findIndex(x => x.text === dragId)
     const newItem =      this.state.standbyToggle ?  {
             unitnumber: dragId,
             standby: false
@@ -54,15 +59,15 @@ class EquipmentCategory extends Component {
                   unitnumber: dragId,
                   standby: true
                 }
-    dispatch(transferPump(dragId, newItem))
+    dispatch(transferEquipment(dragId, newItem, this.props.type))
   }
 
   moveCard = (dragId, hoverIndex, dragstandby) => {
     const { dispatch } = this.props
-    const dragIndex = this.props.pumps.findIndex(x => x.unitnumber === dragId)
+    const dragIndex = this.props.equipment.findIndex(x => x.unitnumber === dragId)
 
     const dragCard =
-                     this.props.pumps[dragIndex].standby == false && this.props.pumps[hoverIndex].standby == true ?
+                     this.props.equipment[dragIndex].standby == false && this.props.equipment[hoverIndex].standby == true ?
                      {
                        unitnumber: dragId,
                        standby: true
@@ -70,14 +75,14 @@ class EquipmentCategory extends Component {
                      :
                     {
                       unitnumber: dragId,
-                      standby: this.props.pumps[dragIndex].standby && this.props.pumps[hoverIndex].standby ? true:false
+                      standby: this.props.equipment[dragIndex].standby && this.props.equipment[hoverIndex].standby ? true:false
                     }
     const hoverCard = {
-                      unitnumber: this.props.pumps[hoverIndex].unitnumber,
-                      standby: this.props.pumps[dragIndex].standby ? true:false
+                      unitnumber: this.props.equipment[hoverIndex].unitnumber,
+                      standby: this.props.equipment[dragIndex].standby ? true:false
                         }
 
-    dispatch(transitionPump(dragCard, hoverCard, hoverIndex))
+    dispatch(transitionEquipment(dragCard, hoverCard, hoverIndex, this.props.type))
   }
 
   state = {
@@ -89,88 +94,108 @@ isDragging: false
 
   render() {
     const { classes } = this.props
-    return ( this.props.type === 'blender' | this.props.type === 'pump' ?
-      <div className='row'>
-        <div className='col-5'>
-          <h1>Inline</h1>
-          <Paper className={classes.root}>
-          { this.props.loading ? <CircularProgress /> :
-            this.props.pumps.filter(card => !card.standby).map((card, index) => (
-            <PumpCard
-              id={card.unitnumber}
-              key={card.unitnumber}
-              index={index}
-              text={card.unitnumber}
-              moveCard = {this.moveCard}
-              standby = {card.standby}
-              standbytoggle={this.standbyToggle}
-              tostandby={this.state.standbyToggle}
-              inlineindex={index + 1}
-              droptoggle={this.dropToggle}
-            />
+    return ( this.props.type === 'Blenders' | this.props.type === 'Pumps' ?
+      <div>
+        <ExpansionPanel>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+          <h1>{this.props.type}</h1>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+        <div className='row'>
+          <div className='col-5'>
+            <h3>Inline</h3>
+            <Paper className={classes.root}>
+            { this.props.loading ? <CircularProgress /> :
+              this.props.equipment.filter(card => !card.standby).map((card, index) => (
+              <PumpCard
+                id={card.unitnumber}
+                key={card.unitnumber}
+                index={index}
+                text={card.unitnumber}
+                moveCard = {this.moveCard}
+                standby = {card.standby}
+                standbytoggle={this.standbyToggle}
+                tostandby={this.state.standbyToggle}
+                inlineindex={index + 1}
+                droptoggle={this.dropToggle}
+                type={this.props.type}
+              />
+            )
           )
-        )
-      }
-      </Paper>
-        </div>
-        <div className='col-5'>
-          <h1>Standby</h1>
-          <Paper className={classes.root}>
-          { this.props.loading ? <CircularProgress /> :
-            this.props.pumps.filter(card => card.standby).map((card, index) => (
-            <PumpCard
-              id={card.unitnumber}
-              key={card.unitnumber}
-              index={this.props.pumps.findIndex(x => x.unitnumber === card.unitnumber)}
-              text={card.unitnumber}
-              moveCard = {this.moveCard}
-              standby = {card.standby}
-              standbytoggle={this.standbyToggle}
-              tostandby={this.state.standbyToggle}
-              inlineindex={index + 1}
-              droptoggle={this.dropToggle}
-            />
+        }
+        </Paper>
+          </div>
+          <div className='col-5'>
+            <h3>Standby</h3>
+            <Paper className={classes.root}>
+            { this.props.loading ? <CircularProgress /> :
+              this.props.equipment.filter(card => card.standby).map((card, index) => (
+              <PumpCard
+                id={card.unitnumber}
+                key={card.unitnumber}
+                index={this.props.equipment.findIndex(x => x.unitnumber === card.unitnumber)}
+                text={card.unitnumber}
+                moveCard = {this.moveCard}
+                standby = {card.standby}
+                standbytoggle={this.standbyToggle}
+                tostandby={this.state.standbyToggle}
+                inlineindex={index + 1}
+                droptoggle={this.dropToggle}
+                type={this.props.type}
+              />
+            )
           )
-        )
-      }
-      </Paper>
+        }
+        </Paper>
+          </div>
+          <div className='col-2'>
+            <InlineDrop
+            isDragging={this.state.isDragging}
+            addCard={this.addCard}
+            standbytoggle={this.state.standbyToggle}
+            type={this.props.type}/>
+          </div>
         </div>
-        <div className='col-2'>
-          <InlineDrop
-          isDragging={this.state.isDragging}
-          addCard={this.addCard}
-          standbytoggle={this.state.standbyToggle}/>
-        </div>
-      </div> :         <div className='col-5'>
-                <h1>{this.props.type.toUpperCase() + "'S"}</h1>
-                <Paper className={classes.root}>
-                { this.props.loading ? <CircularProgress /> :
-                  this.props.pumps.filter(card => !card.standby).map((card, index) => (
-                  <PumpCard
-                    id={card.unitnumber}
-                    key={card.unitnumber}
-                    index={index}
-                    text={card.unitnumber}
-                    moveCard = {this.moveCard}
-                    standby = {card.standby}
-                    standbytoggle={this.standbyToggle}
-                    tostandby={this.state.standbyToggle}
-                    inlineindex={index + 1}
-                    droptoggle={this.dropToggle}
-                  />
-                )
-              )
-            }
-            </Paper>
+        </ExpansionPanelDetails>
+        </ExpansionPanel>
+      </div>:
+              <div className='col-3'>
+                <ExpansionPanel>
+                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <h1>{this.props.type}</h1>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <Paper className={classes.root}>
+                    { this.props.loading ? <CircularProgress /> :
+                      this.props.equipment.filter(card => !card.standby).map((card, index) => (
+                      <PumpCard
+                        id={card.unitnumber}
+                        key={card.unitnumber}
+                        index={index}
+                        text={card.unitnumber}
+                        moveCard = {this.moveCard}
+                        standby = {card.standby}
+                        standbytoggle={this.standbyToggle}
+                        tostandby={this.state.standbyToggle}
+                        inlineindex={index + 1}
+                        droptoggle={this.dropToggle}
+                        type={this.props.type}
+                      />
+                    )
+                  )
+                }
+                </Paper>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
               </div>
     );
   }
 }
 
-function mapStateToProps ({pumps, loading}) {
+function mapStateToProps (state, ownProps) {
   return {
-    pumps: pumps,
-    loading: loading
+    equipment: state[ownProps.type.toLowerCase()],
+    loading: state.loading
   }
 }
 
