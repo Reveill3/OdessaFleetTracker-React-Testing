@@ -1,4 +1,4 @@
-import {RECEIVE_HYDRATIONS , TRANSITION_HYDRATION, TRANSFER_HYDRATION} from '../actions/equipment'
+import {RECEIVE_HYDRATIONS , TRANSITION_HYDRATION, TRANSFER_HYDRATION, REMOVE_HYDRATION} from '../actions/equipment'
 
 export default function pumps (state=[], action){
   switch(action.type){
@@ -17,6 +17,10 @@ export default function pumps (state=[], action){
             pump.unitnumber != action.dragId),
             action.newItem]
           return newPumps
+
+        case REMOVE_HYDRATION:
+          let filteredHydrations = [...state.filter(hydration => hydration.unitnumber != action.unitnumber)]
+          return filteredHydrations
 
 
       default:

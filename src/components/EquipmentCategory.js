@@ -110,7 +110,7 @@ isDragging: false
               <PumpCard
                 id={card.unitnumber}
                 key={card.unitnumber}
-                index={index}
+                index={this.props.equipment.findIndex(x => x.unitnumber === card.unitnumber)}
                 text={card.unitnumber}
                 moveCard = {this.moveCard}
                 standby = {card.standby}
@@ -171,7 +171,7 @@ isDragging: false
                       <PumpCard
                         id={card.unitnumber}
                         key={card.unitnumber}
-                        index={index}
+                        index={this.props.equipment.findIndex(x => x.unitnumber === card.unitnumber)}
                         text={card.unitnumber}
                         moveCard = {this.moveCard}
                         standby = {card.standby}

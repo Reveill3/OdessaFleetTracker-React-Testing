@@ -5,6 +5,7 @@ import hydrations from './hydrations'
 import floats from './floats'
 import missiles from './missiles'
 import loading from './loading'
+import treaters from './treaters'
 
 export default combineReducers({
   pumps,
@@ -12,5 +13,6 @@ export default combineReducers({
   hydrations,
   floats,
   missiles,
-  loading
+  loading,
+  treaters
 })

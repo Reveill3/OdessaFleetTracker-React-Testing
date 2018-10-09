@@ -1,4 +1,4 @@
-import {RECEIVE_FLOATS , TRANSITION_FLOAT, TRANSFER_FLOAT} from '../actions/equipment'
+import {RECEIVE_FLOATS , TRANSITION_FLOAT, TRANSFER_FLOAT, REMOVE_FLOAT} from '../actions/equipment'
 
 export default function pumps (state=[], action){
   switch(action.type){
@@ -18,6 +18,9 @@ export default function pumps (state=[], action){
             action.newItem]
           return newPumps
 
+        case REMOVE_FLOAT:
+          let filteredFloats = [...state.filter(float => float.unitnumber != action.unitnumber)]
+          return filteredFloats
 
       default:
         return state

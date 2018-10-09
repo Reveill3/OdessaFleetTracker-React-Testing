@@ -1,41 +1,61 @@
 import { _getPumps, _getBlenders, _getHydrations, _getFloats, _getMissiles } from '../utils/data'
 import { receiveEquipment } from './equipment'
 import { toggleLoading } from './generic'
+import { receiveTreaters } from './treaters'
 
-export default function handleInitialData (type) {
+export default function handleInitialData (crew) {
   return (dispatch) => {
-    dispatch(toggleLoading())
-    _getPumps().then(
-      (pumps) => {
-        dispatch(receiveEquipment(pumps, 'pumps'))
-        dispatch(toggleLoading())
+    const equipment_types = ['pump', 'blender', 'hydration', 'float', 'missile']
+    equipment_types.forEach(type =>{
+      dispatch(toggleLoading())
+      fetch('http://192.168.86.26:8000/api/v1/get_equipment/',{
+        method:'POST',
+        mode: 'cors',
+        body: JSON.stringify({type, crew}),
+        headers:{
+          'Content-Type': 'application/json'
+        }
+          }
+        ).then(
+          response => response.json()
+        ).then(
+          (data) => {
+            dispatch(receiveEquipment(data.equipment, data.type +'s'))
+            dispatch(toggleLoading())
+          }
+        )
+      })
+
+      fetch('http://192.168.86.26:8000/api/v1/get_treaters/', {
+        mode: 'cors'
+      }).then(
+        response => response.json()
+      ).then(data => {
+        dispatch(receiveTreaters(data))
       }
-    )
-    _getBlenders().then(
-      (blenders) => {
-        dispatch(receiveEquipment(blenders, 'blenders'))
-        dispatch(toggleLoading())
-      }
-    )
-    _getHydrations().then(
-      (hydrations) => {
-        dispatch(receiveEquipment(hydrations, 'hydrations'))
-        dispatch(toggleLoading())
-      }
-    )
-    _getFloats().then(
-      (floats) => {
-        dispatch(receiveEquipment(floats, 'floats'))
-        dispatch(toggleLoading())
-      }
-    )
-    _getMissiles().then(
-      (missiles) => {
-        dispatch(receiveEquipment(missiles, 'missiles'))
-        dispatch(toggleLoading())
-      }
-    )
+      )
+
+
 
   }
+}
 
+export function grabList (type, crew) {
+  return (dispatch) => {
+  fetch('http://192.168.86.26:8000/api/v1/get_equipment/',{
+    method:'POST',
+    mode: 'cors',
+    body: JSON.stringify({type, crew}),
+    headers:{
+      'Content-Type': 'application/json'
+    }
+      }
+    ).then(
+      response => response.json()
+    ).then(
+      (data) => {
+        dispatch(receiveEquipment(data.equipment, data.type +'s'))
+        dispatch(toggleLoading())
+      }
+    )}
 }

@@ -1,4 +1,4 @@
-import {RECEIVE_PUMPS , TRANSITION_PUMP, TRANSFER_PUMP} from '../actions/equipment'
+import {RECEIVE_PUMPS , TRANSITION_PUMP, TRANSFER_PUMP, REMOVE_PUMP} from '../actions/equipment'
 
 export default function pumps (state=[], action){
   switch(action.type){
@@ -17,6 +17,10 @@ export default function pumps (state=[], action){
             pump.unitnumber != action.dragId),
             action.newItem]
           return newPumps
+
+        case REMOVE_PUMP:
+          let filteredPumps = [...state.filter(pump => pump.unitnumber != action.unitnumber)]
+          return filteredPumps
 
 
       default:

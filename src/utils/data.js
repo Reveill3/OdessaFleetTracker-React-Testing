@@ -73,11 +73,6 @@ standby: false
 }
 ]
 
-export function _getPumps () {
-  return new Promise((res, rej) => {
-    setTimeout(() => res([...pumps]), 1000)
-  })
-}
 
 export function _getBlenders () {
   return new Promise((res, rej) => {

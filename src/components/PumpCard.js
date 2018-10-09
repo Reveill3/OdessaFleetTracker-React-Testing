@@ -18,6 +18,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Button from '@material-ui/core/Button';
 import { getEmptyImage } from 'react-dnd-html5-backend'
+import MoveEquipmentWindow from './MoveEquipmentWindow'
+import MaintenanceForm from './MaintenanceForm'
 
 // Drag sources and drop targets only interact
 // if they have the same string type.
@@ -96,19 +98,23 @@ class PumpCard extends React.Component {
     return (
       connectDragSource &&
       connectDropTarget &&
-        connectDragSource(
-              connectDropTarget(
               <div style={styles.root} className='mt-2'>
                 <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Chip
-                    avatar={<Avatar>{this.props.inlineindex}</Avatar>}
-                    key={this.props.key}
-                    label={this.props.text}
-                    className={classes.chip}
-                    standbytoggle={this.props.standbyToggle}
-                    tostandby={this.props.toStandby}
-                  />
+                {connectDragSource(
+                      connectDropTarget(
+                  <div>
+                    <Chip
+                      avatar={<Avatar>{this.props.inlineindex}</Avatar>}
+                      key={this.props.key}
+                      label={this.props.text}
+                      className={classes.chip}
+                      standbytoggle={this.props.standbyToggle}
+                      tostandby={this.props.toStandby}
+                    />
+                </div>                  )
+                                )
+                }
               </ExpansionPanelSummary>
               <ExpansionPanelDetails className='d-block'>
                 <div>
@@ -132,16 +138,13 @@ class PumpCard extends React.Component {
                 </Typography>
                 </div>
                 <div className='row'>
-                  <Button className='col-6'>Send</Button>
-                  <Button color="primary" className='col-6'>Log Maintenance</Button>
+                  <MoveEquipmentWindow unitnumber={this.props.text} type={this.props.type} className='col-6'/>
+                  <MaintenanceForm />
                 </div>
               </ExpansionPanelDetails>
               </ExpansionPanel>
             </div>
           )
-
-      )
-    )
   }
 }
 
@@ -155,7 +158,7 @@ export default flow(
       connectDragPreview: connect.dragPreview(),
     }),
   ),
-  DropTarget((props) =>  {console.log(props); return('card-' + props.type)}, cardTarget, (connect) => ({
+  DropTarget((props) => ('card-' + props.type), cardTarget, (connect) => ({
     connectDropTarget: connect.dropTarget(),
   })),
   withStyles(styles)

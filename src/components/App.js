@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import EquipmentCategory from './EquipmentCategory'
 import { connect } from 'react-redux'
 import handleInitialData from '../actions/shared'
+import Transit from './Transit'
 
 
 class App extends Component {
   componentDidMount() {
-  this.props.dispatch(handleInitialData())
+  this.props.dispatch(handleInitialData('red'))
 }
 
   render(){
@@ -23,6 +24,8 @@ class App extends Component {
           <hr/>
           <EquipmentCategory type='Missiles'/>
         </div>
+        <hr/>
+        <Transit/>
       </div>
     )
   }

@@ -13,6 +13,11 @@ export const TRANSFER_BLENDER = 'TRANSFER_BLENDER'
 export const TRANSFER_HYDRATION = 'TRANSFER_HYDRATION'
 export const TRANSFER_FLOAT = 'TRANSFER_FLOAT'
 export const TRANSFER_MISSILE = 'TRANSFER_MISSILE'
+export const REMOVE_PUMP = 'REMOVE_PUMP'
+export const REMOVE_BLENDER = 'REMOVE_BLENDER'
+export const REMOVE_HYDRATION = 'REMOVE_HYDRATION'
+export const REMOVE_FLOAT = 'REMOVE_FLOAT'
+export const REMOVE_MISSILE = 'REMOVE_MISSILE'
 
 
 export function receiveEquipment (equipment, type) {
@@ -116,5 +121,34 @@ switch(type.toLowerCase()){
     type: TRANSFER_MISSILE,
     dragId,
     newItem
+  }}
+}
+
+export function removeEquipment (unitnumber, type) {
+switch(type.toLowerCase()){
+  case 'pumps':
+  return {
+    type: REMOVE_PUMP,
+    unitnumber
+  }
+  case 'blenders':
+  return {
+    type: REMOVE_BLENDER,
+    unitnumber
+  }
+  case 'hydrations':
+  return {
+    type: REMOVE_HYDRATION,
+    unitnumber
+  }
+  case 'floats':
+  return {
+    type: REMOVE_FLOAT,
+    unitnumber
+  }
+  case 'missiles':
+  return {
+    type: REMOVE_MISSILE,
+    unitnumber
   }}
 }
