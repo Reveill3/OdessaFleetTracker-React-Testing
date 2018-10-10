@@ -139,7 +139,7 @@ class PumpCard extends React.Component {
                 </div>
                 <div className='row'>
                   <MoveEquipmentWindow unitnumber={this.props.text} type={this.props.type} className='col-6'/>
-                  <MaintenanceForm />
+                  { this.props.type === 'Pumps' ? <MaintenanceForm unitnumber={this.props.text}/> : null}
                 </div>
               </ExpansionPanelDetails>
               </ExpansionPanel>

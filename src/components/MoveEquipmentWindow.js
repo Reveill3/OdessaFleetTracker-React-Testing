@@ -29,6 +29,46 @@ const styles = theme => ({
   },
 });
 
+export function getRecordId (crew) {
+    switch(crew){
+      case 'pending':
+       return 'rec0Q6Z9R2isNg34V'
+      case 'gold':
+        return 'recq5fVEGnFBUHhzS'
+      case 'blue':
+       return 'recFJQK7ETq0AmPQl'
+      case 'green':
+        return 'recpKW7GFncVrHprG'
+      case 'onyx':
+        return 'recthKqHDjMGUla4A'
+      case 'red':
+        return 'recq5fVEGnFBUHhzS'
+      default:
+        return null
+
+    }
+}
+
+export function getCrewColor (recid) {
+    switch(recid){
+      case 'rec0Q6Z9R2isNg34V':
+       return 'pending'
+      case 'recq5fVEGnFBUHhzS':
+        return 'gold'
+      case 'recFJQK7ETq0AmPQl':
+       return 'blue'
+      case 'recpKW7GFncVrHprG':
+        return 'green'
+      case 'recthKqHDjMGUla4A':
+        return 'onyx'
+      case 'recq5fVEGnFBUHhzS':
+        return 'red'
+      default:
+        return null
+
+    }
+}
+
 class MoveEquipmentWindow extends React.Component {
   state = {
     open: false,
@@ -88,7 +128,7 @@ class MoveEquipmentWindow extends React.Component {
         treater: this.state.treater,
         crew: this.state.crew.toLowerCase(),
         reason: this.state.reason,
-        crewFrom: 'red'
+        crewFrom: 'red' //TODO: link to logged in users crew
       }),
       headers:{
         'Content-Type': 'application/json'
@@ -107,7 +147,7 @@ class MoveEquipmentWindow extends React.Component {
 
     return (
       <div>
-        <Button onClick={this.handleClickOpen}>Send Equipment</Button>
+        <Button onClick={this.handleClickOpen}>Move {this.props.unitnumber}</Button>
         <Dialog
           disableBackdropClick
           disableEscapeKeyDown

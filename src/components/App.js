@@ -3,11 +3,12 @@ import EquipmentCategory from './EquipmentCategory'
 import { connect } from 'react-redux'
 import handleInitialData from '../actions/shared'
 import Transit from './Transit'
+import getRecordId from './MoveEquipmentWindow'
 
 
 class App extends Component {
   componentDidMount() {
-  this.props.dispatch(handleInitialData('red'))
+  this.props.dispatch(handleInitialData('red')) //TODO: need to link 'red' to logged in users crew
 }
 
   render(){

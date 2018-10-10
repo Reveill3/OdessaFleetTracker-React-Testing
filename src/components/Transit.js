@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {ListGroup} from 'reactstrap';
 import Equipment from './Equipment';
+import { getRecordId, getCrewColor } from './MoveEquipmentWindow'
+
 
 class Transit extends Component {
   constructor(props) {
@@ -30,16 +32,16 @@ class Transit extends Component {
         let pumpArray = [];
         MyJson.map((entry) =>{
           if ([entry.transferfrom, entry.transferto].some((condition) =>
-                'red'.includes(condition)
+                getRecordId('red').includes(condition) //TODO: Need to link 'red' to logged in users crew
                   ))
           { pumpArray.push(
             {
               unitnumber: entry.unitnumber,
               id: entry.id,
-              message: entry.unitnumber + ' in transit to ' + entry.transferto,
+              message: entry.unitnumber + ' in transit to ' + getCrewColor(entry.transferto),
               isCancelled: false,
-              transferTo: entry.transferto,
-              transferFrom: entry.transferfrom,
+              transferTo: getCrewColor(entry.transferto),
+              transferFrom: getCrewColor(entry.transferfrom),
               yours: 'red',
               details: entry.details
             })}})
@@ -58,8 +60,8 @@ class Transit extends Component {
     let cancelledId = cancelled.map((object) => {
       return {
         id: object.id,
-        transferfrom: object.transferFrom,
-        transferTo: object.transferTo,
+        transferfrom: getRecordId(object.transferFrom),
+        transferTo: getRecordId(object.transferTo),
         yours: object.yours
       }
 
