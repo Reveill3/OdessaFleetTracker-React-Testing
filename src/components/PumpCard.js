@@ -127,7 +127,7 @@ class PumpCard extends React.Component {
                   </Typography>
                 </div>
 
-                {this.props.maintenance.slice(0,3).map((message, index) =>
+                {this.props.maintenance.slice(Math.max(this.props.maintenance.length - 3, 1)).map((message, index) =>
                   <div key={index}>
                 <Typography variant='body2'>
                   {message}
@@ -139,7 +139,7 @@ class PumpCard extends React.Component {
                   Recent Movement
                 </Typography>
                 </div>
-                {this.props.movement.slice(0,3).map((message, index) =>
+                {this.props.movement.slice(Math.max(this.props.movement.length - 3, 1)).map((message, index) =>
                   <div key={index}>
                 <Typography variant='body2'>
                   {message}

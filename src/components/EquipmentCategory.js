@@ -15,6 +15,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import PumpHoursForm from './PumpHoursForm'
 
 
 
@@ -125,8 +126,8 @@ class EquipmentCategory extends Component {
     const hoverCard = {
                       unitnumber: this.props.equipment[hoverIndex].unitnumber,
                       standby: this.props.equipment[dragIndex].standby ? true:false,
-                      maintenance: this.props.equipment[hoverIndex].maintenance.slice(0,3),
-                      movement: this.props.equipment[hoverIndex].movement.slice(0,3)
+                      maintenance: this.props.equipment[hoverIndex].maintenance.slice(Math.max(this.props.equipment[hoverIndex].maintenance.length - 3, 1)),
+                      movement: this.props.equipment[hoverIndex].movement.slice(Math.max(this.props.equipment[hoverIndex].movement.length - 3, 1))
                         }
 
     dispatch(transitionEquipment(dragCard, hoverCard, hoverIndex, this.props.type))
@@ -220,9 +221,16 @@ updateLoading: false
                 classes={{ colorPrimary: classes.colorPrimary, barColorPrimary: classes.barColorPrimary }}
             />
         </div> :
-        <Button variant="contained" color="primary" onClick ={() => this.updateLayout(inline, standby)}>
-          Update Equipment Layout
-        </Button>}
+        <div>
+          <Button variant="contained" color="primary" onClick ={() => this.updateLayout(inline, standby)}>
+            Update Equipment Layout
+          </Button>
+          {this.props.type === 'Pumps' ?
+          <PumpHoursForm/>:null
+        }
+
+        </div>
+        }
         </ExpansionPanel>
       </div>:
               <div className='col-3'>
