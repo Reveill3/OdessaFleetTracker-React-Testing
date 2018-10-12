@@ -8,7 +8,7 @@ export default function handleInitialData (crew) {
     const equipment_types = ['pump', 'blender', 'hydration', 'float', 'missile']
     equipment_types.forEach(type =>{
       dispatch(toggleLoading())
-      fetch('http://192.168.86.26:8000/api/v1/get_equipment/',{
+      fetch('http://192.168.1.173:8000/api/v1/get_equipment/',{ // TODO: replace url
         method:'POST',
         mode: 'cors',
         body: JSON.stringify({type, crew}),
@@ -26,7 +26,7 @@ export default function handleInitialData (crew) {
         )
       })
 
-      fetch('http://192.168.86.26:8000/api/v1/get_treaters/', {
+      fetch('http://192.168.1.173:8000/api/v1/get_treaters/', {  // TODO: replace url
         mode: 'cors'
       }).then(
         response => response.json()

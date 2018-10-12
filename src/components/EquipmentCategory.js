@@ -61,7 +61,7 @@ class EquipmentCategory extends Component {
 
   updateLayout = (inline, standby) => {
     this.toggleLoading()
-    fetch('http://192.168.86.26:8000/api/v1/update_layout/',{
+    fetch('http://192.168.1.173:8000/api/v1/update_layout/',{ // TODO: replace url
       method:'POST',
       mode: 'cors',
       body: JSON.stringify({

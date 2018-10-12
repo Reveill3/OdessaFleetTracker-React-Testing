@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -40,9 +40,27 @@ class PumpHoursForm extends React.Component {
     open: false,
   };
 
+handleSubmit = () => {
+  fetch('http://192.168.1.173:8000/api/v1/update_pump_hours/',{ // TODO: replace url
+    method:'POST',
+    mode: 'cors',
+    body: JSON.stringify(this.state),
+    headers:{
+      'Content-Type': 'application/json'
+    }
+      }
+    ).then(console.log('Update Success'))
+}
+
   handleClickOpen = () => {
     this.setState({ open: true });
   };
+
+  handleChange =  (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
 
   handleClose = () => {
     this.setState({ open: false });
@@ -64,28 +82,34 @@ class PumpHoursForm extends React.Component {
               <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
-              <Typography variant="h6" color="inherit" className={classes.flex}>
+              <Typography variant="h4" color="inherit" className={classes.flex}>
                 Pump Hours
               </Typography>
-              <Button color="inherit" onClick={this.handleClose}>
+              <Button color="inherit" onClick={this.handleSubmit}>
                 Save Pump Hours
               </Button>
             </Toolbar>
           </AppBar>
           <List>
-            <ListItem button>
-              <ListItemText primary="53Q-12222"/>
-              <TextField
-                id="standard-bare"
-                className={classes.textField}
-                defaultValue="Pump Hours"
-                margin="normal"
-              />
-            </ListItem>
-            <Divider />
-            <ListItem button>
-              <ListItemText primary="Default notification ringtone" secondary="Tethys" />
-            </ListItem>
+            {this.props.pumps.map((pump) =>
+              <Fragment key={pump.unitnumber}>
+                <ListItem button>
+                  <ListItemText primary={pump.unitnumber}/>
+                  <TextField
+                    id={pump.unitnumber}
+                    name={pump.unitnumber}
+                    className={classes.textField}
+                    placeholder="Pump Hours"
+                    margin="normal"
+                    onChange={this.handleChange}
+                  />
+                </ListItem>
+                <Divider />
+                <ListItem button>
+                  </ListItem>
+              </Fragment>
+            )}
+
           </List>
         </Dialog>
       </div>

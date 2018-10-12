@@ -117,7 +117,7 @@ class MoveEquipmentWindow extends React.Component {
       reason: '',
     }) } else {
     this.props.dispatch(removeEquipment(this.props.unitnumber, this.props.type))
-    fetch('http://192.168.86.26:8000/api/v1/move_equipment/',{
+    fetch('http://192.168.1.173:8000/api/v1/move_equipment/',{ // TODO: replace url
       method:'POST',
       mode: 'cors',
       body: JSON.stringify({
