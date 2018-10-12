@@ -20,6 +20,8 @@ import Button from '@material-ui/core/Button';
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import MoveEquipmentWindow from './MoveEquipmentWindow'
 import MaintenanceForm from './MaintenanceForm'
+import DataTable from './DataTable'
+import Grid from '@material-ui/core/Grid';
 
 // Drag sources and drop targets only interact
 // if they have the same string type.
@@ -50,7 +52,8 @@ const cardSource = {
       index: props.index,
       standby: props.standby,
       movement: props.movement,
-      maintenance: props.maintenance
+      maintenance: props.maintenance,
+      holehours: props.holehours
     }
   },
 
@@ -66,7 +69,8 @@ drop(props, monitor, component) {
     const dragstandby = monitor.getItem().standby
     const movement = monitor.getItem().movement
     const maintenance = monitor.getItem().maintenance
-    props.moveCard(dragId, hoverIndex, dragstandby, maintenance, movement)
+    const holehours = monitor.getItem().holehours
+    props.moveCard(dragId, hoverIndex, dragstandby, maintenance, movement, holehours)
   },
 }
 
@@ -102,7 +106,7 @@ class PumpCard extends React.Component {
     return (
       connectDragSource &&
       connectDropTarget &&
-              <div style={styles.root} className='mt-2'>
+                <Grid item xs={12}>
                 <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 {connectDragSource(
@@ -121,11 +125,12 @@ class PumpCard extends React.Component {
                 }
               </ExpansionPanelSummary>
               <ExpansionPanelDetails className='d-block'>
-                <div>
+                <Grid container spacing={24}>
+                <Grid item xs={12}>
                   <Typography variant='title'>
                     Recent Maintenance
                   </Typography>
-                </div>
+
 
                 {this.props.maintenance.slice(Math.max(this.props.maintenance.length - 3, 1)).map((message, index) =>
                   <div key={index}>
@@ -134,11 +139,11 @@ class PumpCard extends React.Component {
                 </Typography>
                 </div>
               )}
-                <div>
+                </Grid>
+                <Grid item xs={12}>
                 <Typography variant='title'>
                   Recent Movement
                 </Typography>
-                </div>
                 {this.props.movement.slice(Math.max(this.props.movement.length - 3, 1)).map((message, index) =>
                   <div key={index}>
                 <Typography variant='body2'>
@@ -146,13 +151,18 @@ class PumpCard extends React.Component {
                 </Typography>
                 </div>
               )}
-                <div className='row'>
+                </Grid>
+                <Grid item xs={12}>
+                <DataTable holehours={this.props.holehours}/>
+                </Grid>
+                <Grid item xs={12}>
                   <MoveEquipmentWindow toggleNotification={this.props.toggleNotification} handleError={this.props.handleError} unitnumber={this.props.text} type={this.props.type} className='col-6'/>
                   { this.props.type === 'Pumps' ? <MaintenanceForm unitnumber={this.props.text}/> : null}
-                </div>
+                </Grid>
+                </Grid>
               </ExpansionPanelDetails>
               </ExpansionPanel>
-            </div>
+            </Grid>
           )
   }
 }

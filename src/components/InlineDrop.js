@@ -13,8 +13,9 @@ const addTarget = {
     const dragId = monitor.getItem().id
     const movement = monitor.getItem().movement
     const maintenance = monitor.getItem().maintenance
+    const holehours = monitor.getItem().holehours
 
-    props.addCard(dragId, movement, maintenance)
+    props.addCard(dragId, movement, maintenance, holehours)
   }
 }
 

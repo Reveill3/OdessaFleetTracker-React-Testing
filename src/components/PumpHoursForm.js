@@ -41,7 +41,7 @@ class PumpHoursForm extends React.Component {
   };
 
 handleSubmit = () => {
-  fetch('http://192.168.1.173:8000/api/v1/update_pump_hours/',{ // TODO: replace url
+  fetch('http://192.168.86.26:8000/api/v1/update_pump_hours/',{ // TODO: replace url
     method:'POST',
     mode: 'cors',
     body: JSON.stringify(this.state),

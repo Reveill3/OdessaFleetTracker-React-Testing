@@ -16,6 +16,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import PumpHoursForm from './PumpHoursForm'
+import Grid from '@material-ui/core/Grid';
 
 
 
@@ -40,6 +41,9 @@ colorPrimary: {
 barColorPrimary: {
   backgroundColor: '#00695C',
 },
+gridroot: {
+  flexGrow: 1,
+}
 });
 
 
@@ -61,7 +65,7 @@ class EquipmentCategory extends Component {
 
   updateLayout = (inline, standby) => {
     this.toggleLoading()
-    fetch('http://192.168.1.173:8000/api/v1/update_layout/',{ // TODO: replace url
+    fetch('http://192.168.86.26:8000/api/v1/update_layout/',{ // TODO: replace url
       method:'POST',
       mode: 'cors',
       body: JSON.stringify({
@@ -87,26 +91,37 @@ class EquipmentCategory extends Component {
     })
   }
 
-  addCard = (dragId, movement, maintenance) => {
+  addCard = (dragId, movement, maintenance, holehours) => {
     const { dispatch } = this.props
     const dragIndex = this.props.equipment.findIndex(x => x.text === dragId)
     const newItem =      this.state.standbyToggle ?  {
             unitnumber: dragId,
             standby: false,
             maintenance: maintenance,
-            movement: movement
+            movement: movement,
+            hole_1_life: holehours[0],
+            hole_2_life: holehours[1],
+            hole_3_life: holehours[2],
+            hole_4_life: holehours[3],
+            hole_5_life: holehours[4],
           } : {
                   unitnumber: dragId,
                   standby: true,
                   maintenance: maintenance,
-                  movement: movement
+                  movement: movement,
+                  hole_1_life: holehours[0],
+                  hole_2_life: holehours[1],
+                  hole_3_life: holehours[2],
+                  hole_4_life: holehours[3],
+                  hole_5_life: holehours[4],
                 }
     dispatch(transferEquipment(dragId, newItem, this.props.type))
   }
 
-  moveCard = (dragId, hoverIndex, dragstandby, maintenance, movement) => {
+  moveCard = (dragId, hoverIndex, dragstandby, maintenance, movement, holehours) => {
     const { dispatch } = this.props
     const dragIndex = this.props.equipment.findIndex(x => x.unitnumber === dragId)
+    console.log(this.props.equipment[hoverIndex])
 
     const dragCard =
                      this.props.equipment[dragIndex].standby == false && this.props.equipment[hoverIndex].standby == true ?
@@ -114,20 +129,36 @@ class EquipmentCategory extends Component {
                        unitnumber: dragId,
                        standby: true,
                        maintenance: maintenance,
-                       movement: movement
+                       movement: movement,
+                       holehours: holehours,
+                       hole_1_life: holehours[0],
+                       hole_2_life: holehours[1],
+                       hole_3_life: holehours[2],
+                       hole_4_life: holehours[3],
+                       hole_5_life: holehours[4],
                      }
                      :
                     {
                       unitnumber: dragId,
                       standby: this.props.equipment[dragIndex].standby && this.props.equipment[hoverIndex].standby ? true:false,
                       maintenance: maintenance,
-                      movement: movement
+                      movement: movement,
+                      hole_1_life: holehours[0],
+                      hole_2_life: holehours[1],
+                      hole_3_life: holehours[2],
+                      hole_4_life: holehours[3],
+                      hole_5_life: holehours[4],
                     }
     const hoverCard = {
                       unitnumber: this.props.equipment[hoverIndex].unitnumber,
                       standby: this.props.equipment[dragIndex].standby ? true:false,
                       maintenance: this.props.equipment[hoverIndex].maintenance.slice(Math.max(this.props.equipment[hoverIndex].maintenance.length - 3, 1)),
-                      movement: this.props.equipment[hoverIndex].movement.slice(Math.max(this.props.equipment[hoverIndex].movement.length - 3, 1))
+                      movement: this.props.equipment[hoverIndex].movement.slice(Math.max(this.props.equipment[hoverIndex].movement.length - 3, 1)),
+                      hole_1_life: this.props.equipment[hoverIndex].hole_1_life,
+                      hole_2_life: this.props.equipment[hoverIndex].hole_2_life,
+                      hole_3_life: this.props.equipment[hoverIndex].hole_3_life,
+                      hole_4_life: this.props.equipment[hoverIndex].hole_4_life,
+                      hole_5_life: this.props.equipment[hoverIndex].hole_5_life,
                         }
 
     dispatch(transitionEquipment(dragCard, hoverCard, hoverIndex, this.props.type))
@@ -146,14 +177,14 @@ updateLoading: false
     const inline =   this.props.equipment.filter(card => !card.standby)
     const standby = this.props.equipment.filter(card => card.standby)
     return ( this.props.type === 'Blenders' | this.props.type === 'Pumps' ?
-      <div>
+      <div className={classes.gridroot}>
         <ExpansionPanel>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <h1>{this.props.type}</h1>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-        <div className='row'>
-          <div className='col-5'>
+          <Grid container spacing={24}>
+          <Grid item xs={5}>
             <h3>Inline</h3>
             <Paper className={classes.root}>
             { this.props.loading ? <CircularProgress /> :
@@ -174,47 +205,57 @@ updateLoading: false
                 toggleNotification={this.props.toggleNotification}
                 maintenance={card.maintenance}
                 movement={card.movement}
+                holehours={[card.hole_1_life,
+                          card.hole_2_life,
+                          card.hole_3_life,
+                          card.hole_4_life,
+                          card.hole_5_life]}
               />
             )
           )
         }
         </Paper>
-          </div>
-          <div className='col-5'>
+      </Grid>
+          <Grid item xs={5}>
             <h3>Standby</h3>
-            <Paper className={classes.root}>
-            { this.props.loading ? <CircularProgress /> :
-              standby.map((card, index) => (
-              <PumpCard
-                id={card.unitnumber}
-                key={card.unitnumber}
-                index={this.props.equipment.findIndex(x => x.unitnumber === card.unitnumber)}
-                text={card.unitnumber}
-                moveCard = {this.moveCard}
-                standby = {card.standby}
-                standbytoggle={this.standbyToggle}
-                tostandby={this.state.standbyToggle}
-                inlineindex={index + 1}
-                droptoggle={this.dropToggle}
-                type={this.props.type}
-                handleError={this.props.handleError}
-                toggleNotification={this.props.toggleNotification}
-                maintenance={card.maintenance}
-                movement={card.movement}
-              />
+              <Paper className={classes.root}>
+              { this.props.loading ? <CircularProgress /> :
+                standby.map((card, index) => (
+                <PumpCard
+                  id={card.unitnumber}
+                  key={card.unitnumber}
+                  index={this.props.equipment.findIndex(x => x.unitnumber === card.unitnumber)}
+                  text={card.unitnumber}
+                  moveCard = {this.moveCard}
+                  standby = {card.standby}
+                  standbytoggle={this.standbyToggle}
+                  tostandby={this.state.standbyToggle}
+                  inlineindex={index + 1}
+                  droptoggle={this.dropToggle}
+                  type={this.props.type}
+                  handleError={this.props.handleError}
+                  toggleNotification={this.props.toggleNotification}
+                  maintenance={card.maintenance}
+                  movement={card.movement}
+                  holehours={[card.hole_1_life,
+                            card.hole_2_life,
+                            card.hole_3_life,
+                            card.hole_4_life,
+                            card.hole_5_life]}
+                />
+              )
             )
-          )
-        }
-        </Paper>
-          </div>
-          <div className='col-2'>
+          }
+              </Paper>
+            </Grid>
+          <Grid item xs={2}>
             <InlineDrop
             isDragging={this.state.isDragging}
             addCard={this.addCard}
             standbytoggle={this.state.standbyToggle}
             type={this.props.type}/>
-          </div>
-        </div>
+          </Grid>
+        </Grid>
         </ExpansionPanelDetails>
         {this.state.updateLoading ? <div className={classes.loadroot}>
           <LinearProgress
@@ -233,7 +274,7 @@ updateLoading: false
         }
         </ExpansionPanel>
       </div>:
-              <div className='col-3'>
+              <Grid item xs={3}>
                 <ExpansionPanel>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                   <h1>{this.props.type}</h1>
@@ -258,6 +299,11 @@ updateLoading: false
                         toggleNotification={this.props.toggleNotification}
                         maintenance={card.maintenance}
                         movement={card.movement}
+                        holehours={[card.hole_1_life,
+                                  card.hole_2_life,
+                                  card.hole_3_life,
+                                  card.hole_4_life,
+                                  card.hole_5_life]}
                       />
                     )
                   )
@@ -273,7 +319,7 @@ updateLoading: false
                 Update Equipment Layout
               </Button>}
             </ExpansionPanel>
-              </div>
+            </Grid>
     );
   }
 }
