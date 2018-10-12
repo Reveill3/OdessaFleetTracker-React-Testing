@@ -4,6 +4,7 @@ import Equipment from './Equipment';
 import { getRecordId, getCrewColor } from './MoveEquipmentWindow'
 
 
+
 class Transit extends Component {
   constructor(props) {
     super(props);
@@ -43,7 +44,8 @@ class Transit extends Component {
               transferTo: getCrewColor(entry.transferto),
               transferFrom: getCrewColor(entry.transferfrom),
               yours: 'red',
-              details: entry.details
+              details: entry.details,
+              type: entry.type
             })}})
 
         this.setState(
@@ -62,7 +64,8 @@ class Transit extends Component {
         id: object.id,
         transferfrom: getRecordId(object.transferFrom),
         transferTo: getRecordId(object.transferTo),
-        yours: object.yours
+        yours: object.yours,
+        type: object.type
       }
 
     });
@@ -74,7 +77,7 @@ class Transit extends Component {
         'Content-Type': 'application/json'
       }
         }
-      ).then( () => this.populate_transit()).then(window.location.reload());
+      ).then( () => this.populate_transit());
 
   };
 
@@ -99,4 +102,6 @@ class Transit extends Component {
   }
 }
 
-export default  Transit;
+
+
+export default Transit;

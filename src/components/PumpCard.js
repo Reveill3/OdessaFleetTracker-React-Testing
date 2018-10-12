@@ -48,7 +48,9 @@ const cardSource = {
     return {
       id: props.id,
       index: props.index,
-      standby: props.standby
+      standby: props.standby,
+      movement: props.movement,
+      maintenance: props.maintenance
     }
   },
 
@@ -62,7 +64,9 @@ drop(props, monitor, component) {
     const dragId = monitor.getItem().id
     const hoverIndex = props.index
     const dragstandby = monitor.getItem().standby
-    props.moveCard(dragId, hoverIndex, dragstandby)
+    const movement = monitor.getItem().movement
+    const maintenance = monitor.getItem().maintenance
+    props.moveCard(dragId, hoverIndex, dragstandby, maintenance, movement)
   },
 }
 
@@ -122,23 +126,28 @@ class PumpCard extends React.Component {
                     Recent Maintenance
                   </Typography>
                 </div>
-                <div>
+
+                {this.props.maintenance.slice(0,3).map((message) =>
+                  <div>
                 <Typography variant='body2'>
-                  V&S Hole 2
+                  {message}
                 </Typography>
                 </div>
+              )}
                 <div>
                 <Typography variant='title'>
                   Recent Movement
                 </Typography>
                 </div>
-                <div>
+                {this.props.movement.slice(0,3).map((message) =>
+                  <div>
                 <Typography variant='body2'>
-                  Moved to Red Crew on Oct 11 14:00
+                  {message}
                 </Typography>
                 </div>
+              )}
                 <div className='row'>
-                  <MoveEquipmentWindow unitnumber={this.props.text} type={this.props.type} className='col-6'/>
+                  <MoveEquipmentWindow toggleNotification={this.props.toggleNotification} handleError={this.props.handleError} unitnumber={this.props.text} type={this.props.type} className='col-6'/>
                   { this.props.type === 'Pumps' ? <MaintenanceForm unitnumber={this.props.text}/> : null}
                 </div>
               </ExpansionPanelDetails>

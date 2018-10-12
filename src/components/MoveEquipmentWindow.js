@@ -15,7 +15,8 @@ import { connect } from 'react-redux'
 import flow from 'lodash/flow';
 import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {removeEquipment} from '../actions/equipment'
+import {removeEquipment, addEquipment} from '../actions/equipment'
+
 
 const styles = theme => ({
   container: {
@@ -77,13 +78,11 @@ class MoveEquipmentWindow extends React.Component {
     reason: '',
     loading: false,
     success: false,
-    error: false,
   };
 
   crews = ['Onyx', 'Blue', 'Red', 'Green', 'Gold', 'Yard']
 
   handleChange = name => event => {
-    console.log(this.state)
     this.setState({ [name]: event.target.value });
   };
 
@@ -99,7 +98,6 @@ class MoveEquipmentWindow extends React.Component {
       reason: '',
       loading: false,
       success: false,
-      error: false,
      });
   };
 
@@ -109,8 +107,8 @@ class MoveEquipmentWindow extends React.Component {
     })
   }
 
+
   handleSend = () => {
-    console.log(this.state)
     if (this.state.treater === '' | this.state.crew === '' | this.state.reason === '') {
     this.setState({
       error: true,
@@ -118,7 +116,6 @@ class MoveEquipmentWindow extends React.Component {
       crew: '',
       reason: '',
     }) } else {
-    this.handleClose()
     this.props.dispatch(removeEquipment(this.props.unitnumber, this.props.type))
     fetch('http://192.168.86.26:8000/api/v1/move_equipment/',{
       method:'POST',
@@ -135,19 +132,20 @@ class MoveEquipmentWindow extends React.Component {
       }
         }
       ).then((response) => {
-        this.setState({
-          loading: false
-        })
-              }
-            )}
+        this.props.toggleNotification('move')
+      }
+            ).catch((error) => {
+              this.props.handleError()
+              this.props.dispatch(addEquipment(this.props.unitnumber, this.props.type))
+            })
+          }
   }
 
   render() {
     const { classes, treaters } = this.props;
-
     return (
       <div>
-        <Button onClick={this.handleClickOpen}>Move {this.props.unitnumber}</Button>
+        <Button  onClick={this.handleClickOpen}>Move {this.props.unitnumber}</Button>
         <Dialog
           disableBackdropClick
           disableEscapeKeyDown
@@ -155,7 +153,7 @@ class MoveEquipmentWindow extends React.Component {
           onClose={this.handleClose}
         >
           <div className='row'>
-          <DialogTitle className='col-6'>{this.state.error ? 'Please Fill out all fields': this.state.success ? 'Movement logged successfully':'Send Equipment'}</DialogTitle>
+          <DialogTitle className='col-6'>Send Equipment</DialogTitle>
           </div>
           { this.state.success ? null :
             <div>

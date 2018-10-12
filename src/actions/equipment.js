@@ -18,6 +18,11 @@ export const REMOVE_BLENDER = 'REMOVE_BLENDER'
 export const REMOVE_HYDRATION = 'REMOVE_HYDRATION'
 export const REMOVE_FLOAT = 'REMOVE_FLOAT'
 export const REMOVE_MISSILE = 'REMOVE_MISSILE'
+export const ADD_PUMP = 'ADD_PUMP'
+export const ADD_BLENDER = 'ADD_BLENDER'
+export const ADD_HYDRATION = 'ADD_HYDRATION'
+export const ADD_FLOAT = 'ADD_FLOAT'
+export const ADD_MISSILE = 'ADD_MISSILE'
 
 
 export function receiveEquipment (equipment, type) {
@@ -151,4 +156,33 @@ switch(type.toLowerCase()){
     type: REMOVE_MISSILE,
     unitnumber
   }}
+}
+
+export function addEquipment (unitnumber, type) {
+  switch(type.toLowerCase()){
+    case 'pumps':
+    return {
+      type: ADD_PUMP,
+      unitnumber
+    }
+    case 'blenders':
+    return {
+      type: ADD_BLENDER,
+      unitnumber
+    }
+    case 'hydrations':
+    return {
+      type: ADD_HYDRATION,
+      unitnumber
+    }
+    case 'floats':
+    return {
+      type: ADD_FLOAT,
+      unitnumber
+    }
+    case 'missiles':
+    return {
+      type: ADD_MISSILE,
+      unitnumber
+    }}
 }

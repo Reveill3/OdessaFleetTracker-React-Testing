@@ -1,4 +1,4 @@
-import {RECEIVE_MISSILES , TRANSITION_MISSILE, TRANSFER_MISSILE, REMOVE_MISSILE} from '../actions/equipment'
+import {RECEIVE_MISSILES , TRANSITION_MISSILE, TRANSFER_MISSILE, REMOVE_MISSILE, ADD_MISSILE} from '../actions/equipment'
 
 export default function pumps (state=[], action){
   switch(action.type){
@@ -21,6 +21,13 @@ export default function pumps (state=[], action){
         case REMOVE_MISSILE:
           let filteredMissiles = [...state.filter(missile => missile.unitnumber != action.unitnumber)]
           return filteredMissiles
+
+        case ADD_MISSILE:
+          const oneMore = [...state, {
+            unitnumber: action.unitnumber,
+            standby: true
+          }]
+          return oneMore
 
 
       default:

@@ -11,7 +11,10 @@ import Typography from '@material-ui/core/Typography';
 const addTarget = {
   drop(props, monitor, component) {
     const dragId = monitor.getItem().id
-    props.addCard(dragId)
+    const movement = monitor.getItem().movement
+    const maintenance = monitor.getItem().maintenance
+
+    props.addCard(dragId, movement, maintenance)
   }
 }
 

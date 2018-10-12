@@ -1,4 +1,4 @@
-import {RECEIVE_BLENDERS , TRANSITION_BLENDER, TRANSFER_BLENDER, REMOVE_BLENDER} from '../actions/equipment'
+import {RECEIVE_BLENDERS , TRANSITION_BLENDER, TRANSFER_BLENDER, REMOVE_BLENDER, ADD_BLENDER} from '../actions/equipment'
 
 export default function pumps (state=[], action){
   switch(action.type){
@@ -22,6 +22,12 @@ export default function pumps (state=[], action){
           let filteredBlenders = [...state.filter(blender => blender.unitnumber != action.unitnumber)]
           return filteredBlenders
 
+        case ADD_BLENDER:
+          const oneMorePump = [...state, {
+            unitnumber: action.unitnumber,
+            standby: true
+          }]
+          return oneMorePump
 
       default:
         return state

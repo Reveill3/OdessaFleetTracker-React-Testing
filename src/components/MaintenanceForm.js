@@ -176,7 +176,6 @@ class MaintenanceForm extends React.Component {
   };
 
   render() {
-    console.log(this.state)
     const { classes, treaters } = this.props;
     const { open, vertical, horizontal } = this.state;
     const main_type_buttons =
@@ -216,7 +215,7 @@ class MaintenanceForm extends React.Component {
           }
           className={classes.snackbar}
         />
-        <Button onClick={this.handleClickOpen}>Log Maintenance</Button>
+        <Button color="primary" onClick={this.handleClickOpen}>Log Maintenance</Button>
         <Dialog
           disableBackdropClick
           disableEscapeKeyDown
