@@ -10,10 +10,10 @@ import Home from './components/Home';
 import $ from 'jquery'
 
 const store = createStore(reducer, composeWithDevTools(middleware))
-let crew = {name: 'red'}
+let crew = $("#my-data").data('name')
 console.log(crew)
 ReactDOM.render(
   <Provider store={store}>
-    <App authedUser={crew.name}/>
+    <App authedUser={crew}/>
   </Provider>
   , document.getElementById('root'));

@@ -8,6 +8,16 @@ export default function handleInitialData (crew) {
   return (dispatch) => {
     dispatch(toggleLoading())
     const equipment_types = ['pump', 'blender', 'hydration', 'float', 'missile']
+
+    fetch('https://odessafleettracker.herokuapp.com/api/v1/get_treaters/', {  // TODO: replace url
+      mode: 'cors'
+    }).then(
+      response => response.json()
+    ).then(data => {
+
+      dispatch(receiveTreaters(data))
+    }
+  ).then(
     equipment_types.forEach(type =>{
       fetch('https://odessafleettracker.herokuapp.com/api/v1/get_equipment/',{ // TODO: replace url
         method:'POST',
@@ -25,17 +35,9 @@ export default function handleInitialData (crew) {
             dispatch(receiveEquipment(data.equipment, data.type +'s'))
           }
         )
-      })
+      }))
 
-      fetch('https://odessafleettracker.herokuapp.com/api/v1/get_treaters/', {  // TODO: replace url
-        mode: 'cors'
-      }).then(
-        response => response.json()
-      ).then(data => {
 
-        dispatch(receiveTreaters(data))
-      }
-      )
 
 
 

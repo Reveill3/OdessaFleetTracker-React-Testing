@@ -83,7 +83,7 @@ class Transit extends Component {
 
     });
     this.props.dispatch(toggleLoading())
-    fetch('http://192.168.86.26:8000/api/v1/transit_list/', {
+    fetch('https://odessafleettracker.herokuapp.com/api/v1/transit_list/', { //TODO: Update Url
       method:'POST',
       mode: 'cors',
       body: JSON.stringify(cancelledId),
