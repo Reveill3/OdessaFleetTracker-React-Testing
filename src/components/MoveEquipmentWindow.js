@@ -35,7 +35,7 @@ export function getRecordId (crew) {
       case 'pending':
        return 'rec0Q6Z9R2isNg34V'
       case 'gold':
-        return 'recq5fVEGnFBUHhzS'
+        return 'recdf5ccGBdkP9nHg'
       case 'blue':
        return 'recFJQK7ETq0AmPQl'
       case 'green':
@@ -54,7 +54,7 @@ export function getCrewColor (recid) {
     switch(recid){
       case 'rec0Q6Z9R2isNg34V':
        return 'pending'
-      case 'recq5fVEGnFBUHhzS':
+      case 'recdf5ccGBdkP9nHg':
         return 'gold'
       case 'recFJQK7ETq0AmPQl':
        return 'blue'
@@ -74,7 +74,7 @@ class MoveEquipmentWindow extends React.Component {
   state = {
     open: false,
     treater: '',
-    crew:'',
+    transferTo:'',
     reason: '',
     loading: false,
     success: false,
@@ -94,7 +94,7 @@ class MoveEquipmentWindow extends React.Component {
     this.setState({
       open: false,
       treater: '',
-      crew:'',
+      transferTo:'',
       reason: '',
       loading: false,
       success: false,
@@ -109,11 +109,11 @@ class MoveEquipmentWindow extends React.Component {
 
 
   handleSend = () => {
-    if (this.state.treater === '' | this.state.crew === '' | this.state.reason === '') {
+    if (this.state.treater === '' | this.state.transferTo === '' | this.state.reason === '') {
     this.setState({
       error: true,
       treater: '',
-      crew: '',
+      transferTo: '',
       reason: '',
     }) } else {
     this.props.dispatch(removeEquipment(this.props.unitnumber, this.props.type))
@@ -123,9 +123,9 @@ class MoveEquipmentWindow extends React.Component {
       body: JSON.stringify({
         equipment: this.props.unitnumber,
         treater: this.state.treater,
-        crew: this.state.crew.toLowerCase(),
+        transferTo: this.state.transferTo.toLowerCase(),
         reason: this.state.reason,
-        crewFrom: 'red' //TODO: link to logged in users crew
+        crewFrom: this.props.authedUser //TODO: link to logged in users crew
       }),
       headers:{
         'Content-Type': 'application/json'
@@ -180,8 +180,8 @@ class MoveEquipmentWindow extends React.Component {
                   <InputLabel htmlFor="sendto">Send To</InputLabel>
                   <Select
                     native
-                    value={this.state.crew}
-                    onChange={this.handleChange('crew')}
+                    value={this.state.transferTo}
+                    onChange={this.handleChange('transferTo')}
                     input={<Input id="sendto" />}
                   >
                     <option value="" />
@@ -231,7 +231,8 @@ MoveEquipmentWindow.propTypes = {
 
 function mapStateToProps (state) {
   return {
-    treaters: state.treaters
+    treaters: state.treaters,
+    authedUser: state.authedUser
   }
 }
 

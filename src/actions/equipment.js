@@ -160,27 +160,27 @@ switch(type.toLowerCase()){
 
 export function addEquipment (unitnumber, type) {
   switch(type.toLowerCase()){
-    case 'pumps':
+    case 'pump':
     return {
       type: ADD_PUMP,
       unitnumber
     }
-    case 'blenders':
+    case 'blender':
     return {
       type: ADD_BLENDER,
       unitnumber
     }
-    case 'hydrations':
+    case 'hydration':
     return {
       type: ADD_HYDRATION,
       unitnumber
     }
-    case 'floats':
+    case 'float':
     return {
       type: ADD_FLOAT,
       unitnumber
     }
-    case 'missiles':
+    case 'missile':
     return {
       type: ADD_MISSILE,
       unitnumber

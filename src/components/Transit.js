@@ -1,8 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component , Fragment} from 'react';
 import {ListGroup} from 'reactstrap';
 import Equipment from './Equipment';
 import { getRecordId, getCrewColor } from './MoveEquipmentWindow'
-
+import { connect } from 'react-redux';
+import {addEquipment} from '../actions/equipment'
+import CircularProgress from '@material-ui/core/CircularProgress';
+import {toggleLoading} from '../actions/generic'
 
 
 class Transit extends Component {
@@ -27,13 +30,16 @@ class Transit extends Component {
 
 
   populate_transit = () => {
+    this.props.dispatch(toggleLoading())
     fetch('http://192.168.86.26:8000/api/v1/transit_list', {mode: 'cors'})
       .then(response => response.json())
       .then(MyJson => {
+        this.props.dispatch(toggleLoading())
         let pumpArray = [];
         MyJson.map((entry) =>{
+          console.log(entry)
           if ([entry.transferfrom, entry.transferto].some((condition) =>
-                getRecordId('red').includes(condition) //TODO: Need to link 'red' to logged in users crew
+                getRecordId(this.props.authedUser).includes(condition) //TODO: Need to link 'red' to logged in users crew
                   ))
           { pumpArray.push(
             {
@@ -43,9 +49,10 @@ class Transit extends Component {
               isCancelled: false,
               transferTo: getCrewColor(entry.transferto),
               transferFrom: getCrewColor(entry.transferfrom),
-              yours: 'red',
+              yours: this.props.authedUser === getCrewColor(entry.transferfrom), //TODO: connected to authedUser
               details: entry.details,
-              type: entry.type
+              type: entry.type,
+              unit: entry.unit
             })}})
 
         this.setState(
@@ -58,7 +65,13 @@ class Transit extends Component {
 
 
   cancelTransit = () => {
-    let cancelled = this.state.pumps.filter((movement) => movement.isCancelled);
+    const cancelled = this.state.pumps.filter((movement) => movement.isCancelled);
+    cancelled.forEach(cancelledEquipment =>
+      this.props.dispatch(addEquipment(cancelledEquipment.unit, cancelledEquipment.type)
+        )
+      )
+
+
     let cancelledId = cancelled.map((object) => {
       return {
         id: object.id,
@@ -69,6 +82,7 @@ class Transit extends Component {
       }
 
     });
+    this.props.dispatch(toggleLoading())
     fetch('http://192.168.86.26:8000/api/v1/transit_list/', {
       method:'POST',
       mode: 'cors',
@@ -77,7 +91,12 @@ class Transit extends Component {
         'Content-Type': 'application/json'
       }
         }
-      ).then( () => this.populate_transit());
+      ).then( () => {
+        this.props.dispatch(toggleLoading())
+        this.props.toggleNotification('transit')
+      this.populate_transit()}).catch(error =>
+        this.handleError()
+      );
 
   };
 
@@ -93,15 +112,26 @@ class Transit extends Component {
     return (
       <ListGroup>
         <h1 className='border-bottom'>In Transit</h1>
+        {this.props.loading ? <CircularProgress/>:
+        <Fragment>
         <Equipment transitequipment={this.state.pumps} cancelClick={this.handleCancelClick}/>
-        <button className='btn btn-dark' onClick={this.retrieveInTransit}>
-          {this.state.pending ? 'Submit': 'Refresh'}
-        </button>
+          <button className='btn btn-dark' onClick={this.retrieveInTransit}>
+            {this.state.pending ? 'Submit': 'Refresh'}
+          </button>
+        </Fragment>
+        }
       </ListGroup>
     );
   }
 }
 
+function mapStateToProps(state){
+  return {
+    authedUser: state.authedUser,
+    loading: state.loading
+  }
+}
 
 
-export default Transit;
+
+export default connect(mapStateToProps)(Transit);

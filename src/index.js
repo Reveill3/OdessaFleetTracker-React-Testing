@@ -6,12 +6,14 @@ import { createStore } from 'redux'
 import reducer from './reducers/index'
 import middleware from './middleware'
 import { composeWithDevTools } from 'redux-devtools-extension';
-import Home from './components/Home'
+import Home from './components/Home';
+import $ from 'jquery'
 
 const store = createStore(reducer, composeWithDevTools(middleware))
-
+let crew = {name: 'red'}
+console.log(crew)
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <App authedUser={crew.name}/>
   </Provider>
   , document.getElementById('root'));

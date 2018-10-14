@@ -66,7 +66,7 @@ class MaintenanceForm extends React.Component {
     packing_nobrass: '',
     treater: '',
     grease_pressure: '',
-    crew: 'Red' //TODO: link to logged in users crew
+    crew: this.props.authedUser //TODO: link to logged in users crew
   };
 
   options = [1,2,3,4,5,6,7,8,9,10]
@@ -101,6 +101,11 @@ class MaintenanceForm extends React.Component {
         packing_brass: this.state.packing_brass,
         packing_nobrass: this.state.packing_nobrass,
         maintenance_type: maintenance_type,
+        hole_1_life: this.props.holehours[0],
+        hole_2_life: this.props.holehours[1],
+        hole_3_life: this.props.holehours[2],
+        hole_4_life: this.props.holehours[3],
+        hole_5_life: this.props.holehours[4]
       }),
       headers:{
         'Content-Type': 'application/json'
@@ -352,7 +357,8 @@ MaintenanceForm.propTypes = {
 
 function mapStateToProps (state) {
   return {
-    treaters: state.treaters
+    treaters: state.treaters,
+    authedUser: state.authedUser
   }
 }
 

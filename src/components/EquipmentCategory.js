@@ -267,7 +267,7 @@ updateLoading: false
             Update Equipment Layout
           </Button>
           {this.props.type === 'Pumps' ?
-          <PumpHoursForm/>:null
+          <PumpHoursForm toggleNotification={this.props.toggleNotification} raiseError={this.props.raiseError}/>:null
         }
 
         </div>

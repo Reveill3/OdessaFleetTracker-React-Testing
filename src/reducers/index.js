@@ -6,6 +6,7 @@ import floats from './floats'
 import missiles from './missiles'
 import loading from './loading'
 import treaters from './treaters'
+import authedUser from './authedUser'
 
 export default combineReducers({
   pumps,
@@ -14,5 +15,6 @@ export default combineReducers({
   floats,
   missiles,
   loading,
-  treaters
+  treaters,
+  authedUser
 })

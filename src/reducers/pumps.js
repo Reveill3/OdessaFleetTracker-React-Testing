@@ -23,11 +23,7 @@ export default function pumps (state=[], action){
           return filteredPumps
 
         case ADD_PUMP:
-          const oneMore = [...state, {
-            unitnumber: action.unitnumber,
-            standby: true
-          }]
-          return oneMore
+          return [...state, action.unitnumber]
 
 
       default:

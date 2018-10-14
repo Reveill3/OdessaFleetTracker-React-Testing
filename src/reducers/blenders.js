@@ -23,11 +23,7 @@ export default function pumps (state=[], action){
           return filteredBlenders
 
         case ADD_BLENDER:
-          const oneMorePump = [...state, {
-            unitnumber: action.unitnumber,
-            standby: true
-          }]
-          return oneMorePump
+          return [...state, action.unitnumber]
 
       default:
         return state

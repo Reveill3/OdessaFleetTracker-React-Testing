@@ -18,6 +18,10 @@ import flow from 'lodash/flow';
 import TextField from '@material-ui/core/TextField';
 
 const styles = theme => ({
+  root: {
+  maxWidth: 720,
+  backgroundColor: theme.palette.background.paper,
+},
   appBar: {
     position: 'relative',
   },
@@ -49,7 +53,13 @@ handleSubmit = () => {
       'Content-Type': 'application/json'
     }
       }
-    ).then(console.log('Update Success'))
+    ).then(() => {
+      this.props.toggleNotification('hours')
+      this.setState({
+        open:false
+      })
+    })
+    .catch(error => this.props.raiseError())
 }
 
   handleClickOpen = () => {
@@ -69,7 +79,7 @@ handleSubmit = () => {
   render() {
     const { classes } = this.props;
     return (
-      <div>
+      <div >
         <Button variant="contained" color='primary' onClick={this.handleClickOpen}>Update Pump Hours</Button>
         <Dialog
           fullScreen
@@ -82,7 +92,7 @@ handleSubmit = () => {
               <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
-              <Typography variant="h4" color="inherit" className={classes.flex}>
+              <Typography variant="display1" color="inherit" className={classes.flex}>
                 Pump Hours
               </Typography>
               <Button color="inherit" onClick={this.handleSubmit}>
@@ -90,7 +100,8 @@ handleSubmit = () => {
               </Button>
             </Toolbar>
           </AppBar>
-          <List>
+          <div className='container'>
+          <List className={classes.root}>
             {this.props.pumps.map((pump) =>
               <Fragment key={pump.unitnumber}>
                 <ListItem button>
@@ -105,12 +116,11 @@ handleSubmit = () => {
                   />
                 </ListItem>
                 <Divider />
-                <ListItem button>
-                  </ListItem>
               </Fragment>
             )}
 
           </List>
+        </div>
         </Dialog>
       </div>
     );

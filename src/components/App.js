@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import EquipmentCategory from './EquipmentCategory'
 import { connect } from 'react-redux'
 import handleInitialData from '../actions/shared'
+import {setAuthedUser} from '../actions/authedUser'
 import Transit from './Transit'
 import getRecordId from './MoveEquipmentWindow'
 import flow from 'lodash/flow';
@@ -48,6 +49,24 @@ class App extends Component {
         })
         return updateMessage
 
+      case 'transit':
+        const transitMessage = this.state.error ? "There was an error. Please refresh the page and try again later.":
+        'Equipment was moved to the standby column for that category of equipment.'
+        this.setState ({
+          notification: true,
+          message: transitMessage
+        })
+        return transitMessage
+
+      case 'hours':
+        const hoursMessage = this.state.error ? 'There was an error. Please refresh the page and try again later.':
+        'Pump Hours Updated Succesfully'
+        this.setState({
+          notification: true,
+          message: hoursMessage
+        })
+        return hoursMessage
+
       default:
       const message = ''
         this.setState ({
@@ -66,7 +85,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-  this.props.dispatch(handleInitialData('red')) //TODO: need to link 'red' to logged in users crew
+  this.props.dispatch(setAuthedUser(this.props.authedUser))
+  this.props.dispatch(handleInitialData(this.props.authedUser)) //TODO: need to link 'red' to logged in users crew
 }
 
   render(){
@@ -100,7 +120,7 @@ class App extends Component {
           <EquipmentCategory toggleNotification={this.toggleNotification} handleError={this.raiseError} type='Missiles'/>
         </div>
         <hr/>
-        <Transit/>
+        <Transit handleError={this.raiseError} toggleNotification={this.toggleNotification}/>
       </div>
     )
   }

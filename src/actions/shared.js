@@ -4,10 +4,11 @@ import { toggleLoading } from './generic'
 import { receiveTreaters } from './treaters'
 
 export default function handleInitialData (crew) {
+
   return (dispatch) => {
+    dispatch(toggleLoading())
     const equipment_types = ['pump', 'blender', 'hydration', 'float', 'missile']
     equipment_types.forEach(type =>{
-      dispatch(toggleLoading())
       fetch('http://192.168.86.26:8000/api/v1/get_equipment/',{ // TODO: replace url
         method:'POST',
         mode: 'cors',
@@ -20,8 +21,8 @@ export default function handleInitialData (crew) {
           response => response.json()
         ).then(
           (data) => {
-            dispatch(receiveEquipment(data.equipment, data.type +'s'))
             dispatch(toggleLoading())
+            dispatch(receiveEquipment(data.equipment, data.type +'s'))
           }
         )
       })
@@ -31,6 +32,7 @@ export default function handleInitialData (crew) {
       }).then(
         response => response.json()
       ).then(data => {
+
         dispatch(receiveTreaters(data))
       }
       )

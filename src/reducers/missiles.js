@@ -23,11 +23,7 @@ export default function pumps (state=[], action){
           return filteredMissiles
 
         case ADD_MISSILE:
-          const oneMore = [...state, {
-            unitnumber: action.unitnumber,
-            standby: true
-          }]
-          return oneMore
+          return [...state, action.unitnumber]
 
 
       default:
