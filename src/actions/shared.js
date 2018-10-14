@@ -9,7 +9,7 @@ export default function handleInitialData (crew) {
     dispatch(toggleLoading())
     const equipment_types = ['pump', 'blender', 'hydration', 'float', 'missile']
     equipment_types.forEach(type =>{
-      fetch('http://192.168.86.26:8000/api/v1/get_equipment/',{ // TODO: replace url
+      fetch('https://odessafleettracker.herokuapp.com/api/v1/get_equipment/',{ // TODO: replace url
         method:'POST',
         mode: 'cors',
         body: JSON.stringify({type, crew}),
