@@ -31,7 +31,7 @@ class Transit extends Component {
 
   populate_transit = () => {
     this.props.dispatch(toggleLoading())
-    fetch('http://192.168.86.26:8000/api/v1/transit_list', {mode: 'cors'})
+    fetch('https://odessafleettracker.herokuapp.com/api/v1/transit_list', {mode: 'cors'})
       .then(response => response.json())
       .then(MyJson => {
         this.props.dispatch(toggleLoading())

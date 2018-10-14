@@ -65,7 +65,7 @@ class EquipmentCategory extends Component {
 
   updateLayout = (inline, standby) => {
     this.toggleLoading()
-    fetch('http://192.168.86.26:8000/api/v1/update_layout/',{ // TODO: replace url
+    fetch('https://odessafleettracker.herokuapp.com/api/v1/update_layout/',{ // TODO: replace url
       method:'POST',
       mode: 'cors',
       body: JSON.stringify({

@@ -27,7 +27,7 @@ export default function handleInitialData (crew) {
         )
       })
 
-      fetch('http://192.168.86.26:8000/api/v1/get_treaters/', {  // TODO: replace url
+      fetch('https://odessafleettracker.herokuapp.com/api/v1/get_treaters/', {  // TODO: replace url
         mode: 'cors'
       }).then(
         response => response.json()

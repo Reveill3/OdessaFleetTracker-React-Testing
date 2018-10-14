@@ -82,7 +82,7 @@ class MaintenanceForm extends React.Component {
     const error = this.state.pump_hours === '' | this.state.hole === '' | this.state.treater === ''
     const maintenance_type = this.state.display === 'vs' ? 'valves & seats': 'packing'
     if (error != true)
-{    fetch('http://192.168.86.26:8000/api/v1/log_maintenance/',{ // TODO: replace url
+{    fetch('https://odessafleettracker.herokuapp.com/api/v1/log_maintenance/',{ // TODO: replace url
       method:'POST',
       mode: 'cors',
       body: JSON.stringify({
