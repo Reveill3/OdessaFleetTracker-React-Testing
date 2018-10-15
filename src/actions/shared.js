@@ -6,8 +6,7 @@ import { receiveTreaters } from './treaters'
 export default function handleInitialData (crew) {
 
   return (dispatch) => {
-    dispatch(toggleLoading())
-    const equipment_types = ['pump', 'blender', 'hydration', 'float', 'missile']
+    const equipment_types = ['pump', 'blender', 'hydration', 'float', 'missile', 'chem_add', 'data_van', 'crew_van']
 
     fetch('https://odessafleettracker.herokuapp.com/api/v1/get_treaters/', {  // TODO: replace url
       mode: 'cors'
@@ -31,7 +30,7 @@ export default function handleInitialData (crew) {
           response => response.json()
         ).then(
           (data) => {
-            dispatch(toggleLoading())
+            console.log(data)
             dispatch(receiveEquipment(data.equipment, data.type +'s'))
           }
         )

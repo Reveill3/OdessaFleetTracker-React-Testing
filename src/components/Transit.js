@@ -31,13 +31,12 @@ class Transit extends Component {
 
   populate_transit = () => {
     this.props.dispatch(toggleLoading())
-    fetch('https://odessafleettracker.herokuapp.com/api/v1/transit_list', {mode: 'cors'})
+    fetch('https://odessafleettracker.herokuapp.com/api/v1/transit_list/', {mode: 'cors'})
       .then(response => response.json())
       .then(MyJson => {
         this.props.dispatch(toggleLoading())
         let pumpArray = [];
         MyJson.map((entry) =>{
-          console.log(entry)
           if ([entry.transferfrom, entry.transferto].some((condition) =>
                 getRecordId(this.props.authedUser).includes(condition) //TODO: Need to link 'red' to logged in users crew
                   ))
@@ -54,7 +53,6 @@ class Transit extends Component {
               type: entry.type,
               unit: entry.unit
             })}})
-
         this.setState(
           {
             pending: false,
@@ -66,9 +64,11 @@ class Transit extends Component {
 
   cancelTransit = () => {
     const cancelled = this.state.pumps.filter((movement) => movement.isCancelled);
-    cancelled.forEach(cancelledEquipment =>
+    cancelled.forEach(cancelledEquipment =>{
+      console.log(cancelledEquipment.type)
+      cancelledEquipment.type == 'pump' | cancelledEquipment.type == 'blender' ? null: cancelledEquipment.unit.standby = false
       this.props.dispatch(addEquipment(cancelledEquipment.unit, cancelledEquipment.type)
-        )
+    )}
       )
 
 

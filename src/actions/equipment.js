@@ -3,26 +3,42 @@ export const RECEIVE_BLENDERS = 'RECEIVE_BLENDERS'
 export const RECEIVE_HYDRATIONS = 'RECEIVE_HYDRATIONS'
 export const RECEIVE_FLOATS = 'RECEIVE_FLOATS'
 export const RECEIVE_MISSILES = 'RECEIVE_MISSILES'
+export const RECEIVE_CHEM = 'RECEIVE_CHEM'
+export const RECEIVE_DATAVAN = 'RECEIVE_DATAVAN'
+export const RECEIVE_CREWVAN = 'RECEIVE_CREWVAN'
 export const TRANSITION_PUMP = 'TRANSITION_PUMP'
 export const TRANSITION_BLENDER = 'TRANSITION_BLENDER'
 export const TRANSITION_HYDRATION = 'TRANSITION_HYDRATION'
 export const TRANSITION_FLOAT = 'TRANSITION_FLOAT'
 export const TRANSITION_MISSILE = 'TRANSITION_MISSILE'
+export const TRANSITION_CHEM = 'TRANSITION_CHEM'
+export const TRANSITION_DATAVAN = 'TRANSITION_DATAVAN'
+export const TRANSITION_CREWVAN = 'TRANSITION_CREWVAN'
 export const TRANSFER_PUMP = 'TRANSFER_PUMP'
 export const TRANSFER_BLENDER = 'TRANSFER_BLENDER'
 export const TRANSFER_HYDRATION = 'TRANSFER_HYDRATION'
 export const TRANSFER_FLOAT = 'TRANSFER_FLOAT'
 export const TRANSFER_MISSILE = 'TRANSFER_MISSILE'
+export const TRANSFER_CHEM = 'TRANSFER_CHEM'
+export const TRANSFER_DATAVAN = 'TRANSFER_DATAVAN'
+export const TRANSFER_CREWVAN = 'TRANSFER_CREWVAN'
+export const REMOVE_CHEM = 'REMOVE_CHEM'
 export const REMOVE_PUMP = 'REMOVE_PUMP'
 export const REMOVE_BLENDER = 'REMOVE_BLENDER'
 export const REMOVE_HYDRATION = 'REMOVE_HYDRATION'
 export const REMOVE_FLOAT = 'REMOVE_FLOAT'
 export const REMOVE_MISSILE = 'REMOVE_MISSILE'
+export const REMOVE_DATAVAN = 'REMOVE_DATAVAN'
+export const REMOVE_CREWVAN = 'REMOVE_CREWVAN'
+export const ADD_CHEM = 'ADD_CHEM'
 export const ADD_PUMP = 'ADD_PUMP'
 export const ADD_BLENDER = 'ADD_BLENDER'
 export const ADD_HYDRATION = 'ADD_HYDRATION'
 export const ADD_FLOAT = 'ADD_FLOAT'
 export const ADD_MISSILE = 'ADD_MISSILE'
+export const ADD_DATAVAN = 'ADD_DATAVAN'
+export const ADD_CREWVAN = 'ADD_CREWVAN'
+
 
 
 export function receiveEquipment (equipment, type) {
@@ -47,11 +63,26 @@ export function receiveEquipment (equipment, type) {
         type: RECEIVE_FLOATS,
         equipment
       }
-      case 'missiles':
+    case 'missiles':
+      return {
+        type: RECEIVE_MISSILES,
+        equipment
+      }
+      case 'chem_adds':
         return {
-          type: RECEIVE_MISSILES,
+          type: RECEIVE_CHEM,
           equipment
         }
+      case 'data_vans':
+        return {
+          type: RECEIVE_DATAVAN,
+          equipment
+        }
+        case 'crew_vans':
+          return {
+            type: RECEIVE_CREWVAN,
+            equipment
+          }
     }
   }
 
@@ -92,7 +123,30 @@ switch(type.toLowerCase()){
     dragCard,
     hoverCard,
     index
-  }}
+  }
+  case 'chem_adds':
+  return {
+    type: TRANSITION_CHEM,
+    dragCard,
+    hoverCard,
+    index
+  }
+  case 'data_vans':
+  return {
+    type: TRANSITION_DATAVAN,
+    dragCard,
+    hoverCard,
+    index
+  }
+  case 'crew_vans':
+  return {
+    type: TRANSITION_CREWVAN,
+    dragCard,
+    hoverCard,
+    index
+  }
+
+}
 }
 
 export function transferEquipment (dragId, newItem, type) {
@@ -126,7 +180,27 @@ switch(type.toLowerCase()){
     type: TRANSFER_MISSILE,
     dragId,
     newItem
-  }}
+  }
+  case 'chem_adds':
+  return {
+    type: TRANSFER_CHEM,
+    dragId,
+    newItem
+  }
+  case 'data_vans':
+  return {
+    type: TRANSFER_DATAVAN,
+    dragId,
+    newItem
+  }
+  case 'crew_vans':
+  return {
+    type: TRANSFER_CREWVAN,
+    dragId,
+    newItem
+  }
+
+}
 }
 
 export function removeEquipment (unitnumber, type) {
@@ -155,10 +229,28 @@ switch(type.toLowerCase()){
   return {
     type: REMOVE_MISSILE,
     unitnumber
-  }}
+  }
+  case 'chem_adds':
+  return {
+    type: REMOVE_CHEM,
+    unitnumber
+  }
+  case 'data_vans':
+  return {
+    type: REMOVE_DATAVAN,
+    unitnumber
+  }
+  case 'crew_vans':
+  return {
+    type: REMOVE_CREWVAN,
+    unitnumber
+  }
+
+}
 }
 
 export function addEquipment (unitnumber, type) {
+  console.log(type)
   switch(type.toLowerCase()){
     case 'pump':
     return {
@@ -184,5 +276,21 @@ export function addEquipment (unitnumber, type) {
     return {
       type: ADD_MISSILE,
       unitnumber
-    }}
+    }
+    case 'chem_add':
+    return {
+      type: ADD_CHEM,
+      unitnumber
+    }
+    case 'data_van':
+    return {
+      type: ADD_DATAVAN,
+      unitnumber
+    }
+    case 'crew_van':
+    return {
+      type: ADD_CREWVAN,
+      unitnumber
+    }
+  }
 }

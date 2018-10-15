@@ -1,6 +1,6 @@
 import {RECEIVE_FLOATS , TRANSITION_FLOAT, TRANSFER_FLOAT, REMOVE_FLOAT, ADD_FLOAT} from '../actions/equipment'
 
-export default function pumps (state=[], action){
+export default function floats (state=[], action){
   switch(action.type){
     case RECEIVE_FLOATS:
       return action.equipment

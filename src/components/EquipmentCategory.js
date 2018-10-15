@@ -177,12 +177,13 @@ updateLoading: false
     const inline =   this.props.equipment.filter(card => !card.standby)
     const standby = this.props.equipment.filter(card => card.standby)
     return ( this.props.type === 'Blenders' | this.props.type === 'Pumps' ?
-      <div className={classes.gridroot}>
+      <div>
         <ExpansionPanel>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <h1>{this.props.type}</h1>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
+          <div className={classes.gridroot}>
           <Grid container spacing={24}>
           <Grid item xs={5}>
             <h3>Inline</h3>
@@ -256,6 +257,7 @@ updateLoading: false
             type={this.props.type}/>
           </Grid>
         </Grid>
+        </div>
         </ExpansionPanelDetails>
         {this.state.updateLoading ? <div className={classes.loadroot}>
           <LinearProgress
@@ -274,7 +276,7 @@ updateLoading: false
         }
         </ExpansionPanel>
       </div>:
-              <Grid item xs={3}>
+              <Grid item xs={12}>
                 <ExpansionPanel>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                   <h1>{this.props.type}</h1>

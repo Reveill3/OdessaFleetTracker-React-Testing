@@ -1,6 +1,6 @@
 import {RECEIVE_BLENDERS , TRANSITION_BLENDER, TRANSFER_BLENDER, REMOVE_BLENDER, ADD_BLENDER} from '../actions/equipment'
 
-export default function pumps (state=[], action){
+export default function blenders (state=[], action){
   switch(action.type){
     case RECEIVE_BLENDERS:
       return action.equipment

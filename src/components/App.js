@@ -9,7 +9,14 @@ import flow from 'lodash/flow';
 import { withStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar'
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+  },
+});
 
 class App extends Component {
 
@@ -67,6 +74,14 @@ class App extends Component {
         })
         return hoursMessage
 
+        case 'number':
+          const numberMessage = 'Pump hours must be a number.'
+          this.setState({
+            notification: true,
+            message: numberMessage
+          })
+          return numberMessage
+
       default:
       const message = ''
         this.setState ({
@@ -90,6 +105,7 @@ class App extends Component {
 }
 
   render(){
+    const {classes} = this.props
     const {vertical, horizontal, notification, message} = this.state
     return (
       <div className='container'>
@@ -108,22 +124,48 @@ class App extends Component {
             </Button>
           }
         />
-        <EquipmentCategory toggleNotification={this.toggleNotification} handleError={this.raiseError} type='Pumps'/>
-        <hr/>
-        <EquipmentCategory toggleNotification={this.toggleNotification} handleError={this.raiseError} type='Blenders'/>
-        <hr/>
-        <div className='row'>
-          <EquipmentCategory toggleNotification={this.toggleNotification} handleError={this.raiseError} type='Hydrations'/>
-          <hr/>
-          <EquipmentCategory toggleNotification={this.toggleNotification} handleError={this.raiseError} type='Floats'/>
-          <hr/>
-          <EquipmentCategory toggleNotification={this.toggleNotification} handleError={this.raiseError} type='Missiles'/>
+        <div className={classes.root}>
+          <Grid container spacing={24}>
+            <Grid item xs={12}>
+              <EquipmentCategory toggleNotification={this.toggleNotification} handleError={this.raiseError} type='Pumps'/>
+              <hr/>
+            </Grid>
+            <Grid item xs={12}>
+              <EquipmentCategory toggleNotification={this.toggleNotification} handleError={this.raiseError} type='Blenders'/>
+              <hr/>
+            </Grid>
+            <Grid item xs={5}>
+              <EquipmentCategory toggleNotification={this.toggleNotification} handleError={this.raiseError} type='Hydrations'/>
+              <hr/>
+            </Grid>
+            <Grid item xs={5}>
+              <EquipmentCategory toggleNotification={this.toggleNotification} handleError={this.raiseError} type='Floats'/>
+              <hr/>
+            </Grid>
+            <Grid item xs={5}>
+              <EquipmentCategory toggleNotification={this.toggleNotification} handleError={this.raiseError} type='Missiles'/>
+              <hr/>
+            </Grid>
+            <Grid item xs={5}>
+              <EquipmentCategory toggleNotification={this.toggleNotification} handleError={this.raiseError} type='Chem_Adds'/>
+              <hr/>
+            </Grid>
+            <Grid item xs={5}>
+              <EquipmentCategory toggleNotification={this.toggleNotification} handleError={this.raiseError} type='Data_Vans'/>
+              <hr/>
+            </Grid>
+            <Grid item xs={5}>
+              <EquipmentCategory toggleNotification={this.toggleNotification} handleError={this.raiseError} type='Crew_Vans'/>
+              <hr/>
+            </Grid>
+            </Grid>
         </div>
-        <hr/>
+
+
         <Transit handleError={this.raiseError} toggleNotification={this.toggleNotification}/>
       </div>
     )
   }
 }
 
-export default connect()(App)
+export default flow(withStyles(styles), connect())(App)

@@ -1,6 +1,6 @@
 import {RECEIVE_HYDRATIONS , TRANSITION_HYDRATION, TRANSFER_HYDRATION, REMOVE_HYDRATION, ADD_HYDRATION} from '../actions/equipment'
 
-export default function pumps (state=[], action){
+export default function hydrations (state=[], action){
   switch(action.type){
     case RECEIVE_HYDRATIONS:
       return action.equipment

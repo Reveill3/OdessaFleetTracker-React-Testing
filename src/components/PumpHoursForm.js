@@ -42,13 +42,14 @@ function Transition(props) {
 class PumpHoursForm extends React.Component {
   state = {
     open: false,
+    toUpdate: []
   };
 
 handleSubmit = () => {
   fetch('https://odessafleettracker.herokuapp.com/api/v1/update_pump_hours/',{ // TODO: replace url
     method:'POST',
     mode: 'cors',
-    body: JSON.stringify(this.state),
+    body: JSON.stringify(this.state.toUpdate),
     headers:{
       'Content-Type': 'application/json'
     }
@@ -56,7 +57,8 @@ handleSubmit = () => {
     ).then(() => {
       this.props.toggleNotification('hours')
       this.setState({
-        open:false
+        open:false,
+        toUpdate: []
       })
     })
     .catch(error => this.props.raiseError())
@@ -67,17 +69,38 @@ handleSubmit = () => {
   };
 
   handleChange =  (e) => {
+    if (e.target.value === ''){
+      this.props.toggleNotification('number')
+      this.setState({
+        toUpdate: [...this.state.toUpdate.slice(0, this.state.toUpdate.findIndex(x => x.unitnumber == e.target.value),
+          ...this.state.toUpdate.slice(this.state.toUpdate.findIndex(x => x.unitnumber == e.target.value) + 1)
+        )]
+      })
+    }else{
+    const newList = this.state.toUpdate.filter(equipment => equipment.unitnumber !== e.target.name)
     this.setState({
-      [e.target.name]: e.target.value
-    })
+      toUpdate: [...newList, {
+        unitnumber: e.target.name,
+        pumphours: e.target.value
+      }]
+      })
+    }
   }
 
+
+
   handleClose = () => {
-    this.setState({ open: false });
+    this.setState({ open: false,
+                    toUpdate: []
+                    });
   };
 
   render() {
+    console.log(this.state)
     const { classes } = this.props;
+    const disabled = this.state.toUpdate.length > 0 ? this.state.toUpdate.some(equipment => isNaN(equipment.pumphours)):
+    true
+    disabled && this.state.open ? this.props.toggleNotification('number'):null
     return (
       <div >
         <Button variant="contained" color='primary' onClick={this.handleClickOpen}>Update Pump Hours</Button>
@@ -95,7 +118,7 @@ handleSubmit = () => {
               <Typography variant="display1" color="inherit" className={classes.flex}>
                 Pump Hours
               </Typography>
-              <Button color="inherit" onClick={this.handleSubmit}>
+              <Button color="inherit" onClick={this.handleSubmit} disabled={disabled}>
                 Save Pump Hours
               </Button>
             </Toolbar>

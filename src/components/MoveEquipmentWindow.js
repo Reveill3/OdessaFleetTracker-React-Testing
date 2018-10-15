@@ -33,17 +33,19 @@ const styles = theme => ({
 export function getRecordId (crew) {
     switch(crew){
       case 'pending':
-       return 'rec0Q6Z9R2isNg34V'
+       return 'recNZ0IqxyzFcevwg'
       case 'gold':
         return 'recdf5ccGBdkP9nHg'
       case 'blue':
        return 'recFJQK7ETq0AmPQl'
       case 'green':
-        return 'recpKW7GFncVrHprG'
+        return 'rech8qQeCQo3g6XsJ'
       case 'onyx':
         return 'recthKqHDjMGUla4A'
       case 'red':
-        return 'recq5fVEGnFBUHhzS'
+        return 'recpKW7GFncVrHprG'
+      case 'yard':
+        return 'recKV3XMYokFrKrGZ'
       default:
         return null
 
@@ -52,18 +54,20 @@ export function getRecordId (crew) {
 
 export function getCrewColor (recid) {
     switch(recid){
-      case 'rec0Q6Z9R2isNg34V':
+      case 'recNZ0IqxyzFcevwg':
        return 'pending'
       case 'recdf5ccGBdkP9nHg':
         return 'gold'
       case 'recFJQK7ETq0AmPQl':
        return 'blue'
-      case 'recpKW7GFncVrHprG':
+      case 'rech8qQeCQo3g6XsJ':
         return 'green'
       case 'recthKqHDjMGUla4A':
         return 'onyx'
-      case 'recq5fVEGnFBUHhzS':
+      case 'recpKW7GFncVrHprG':
         return 'red'
+      case 'recKV3XMYokFrKrGZ':
+        return 'yard'
       default:
         return null
 

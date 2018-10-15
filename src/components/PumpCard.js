@@ -152,9 +152,11 @@ class PumpCard extends React.Component {
                 </div>
               )}
                 </Grid>
+                {this.props.type === 'Pumps' ?
                 <Grid item xs={12}>
                 <DataTable holehours={this.props.holehours}/>
                 </Grid>
+                :null}
                 <Grid item xs={12}>
                   <MoveEquipmentWindow toggleNotification={this.props.toggleNotification} handleError={this.props.handleError} unitnumber={this.props.text} type={this.props.type} className='col-6'/>
                   { this.props.type === 'Pumps' ? <MaintenanceForm holehours={this.props.holehours} unitnumber={this.props.text}/> : null}
