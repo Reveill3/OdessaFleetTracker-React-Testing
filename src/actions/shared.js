@@ -18,6 +18,7 @@ export default function handleInitialData (crew) {
     }
   ).then(
     equipment_types.forEach(type =>{
+      dispatch(toggleLoading(type))
       fetch('https://odessafleettracker.herokuapp.com/api/v1/get_equipment/',{ // TODO: replace url
         method:'POST',
         mode: 'cors',
@@ -32,6 +33,7 @@ export default function handleInitialData (crew) {
           (data) => {
             console.log(data)
             dispatch(receiveEquipment(data.equipment, data.type +'s'))
+            dispatch(toggleLoading(data.type))
           }
         )
       }))

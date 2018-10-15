@@ -8,6 +8,7 @@ import middleware from './middleware'
 import { composeWithDevTools } from 'redux-devtools-extension';
 import Home from './components/Home';
 import $ from 'jquery'
+import HomePage from './components/HomePage'
 
 const store = createStore(reducer, composeWithDevTools(middleware))
 let crew = $("#my-data").data('name')
@@ -17,3 +18,7 @@ ReactDOM.render(
     <App authedUser={crew}/>
   </Provider>
   , document.getElementById('root'));
+
+  ReactDOM.render(
+      <HomePage />
+    , document.getElementById('home-page'));

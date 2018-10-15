@@ -329,7 +329,7 @@ updateLoading: false
 function mapStateToProps (state, ownProps) {
   return {
     equipment: state[ownProps.type.toLowerCase()],
-    loading: state.loading
+    loading: state.loading[ownProps.type.toLowerCase().slice(0,-1)]
   }
 }
 

@@ -30,11 +30,11 @@ class Transit extends Component {
 
 
   populate_transit = () => {
-    this.props.dispatch(toggleLoading())
+    this.props.dispatch(toggleLoading('transit'))
     fetch('https://odessafleettracker.herokuapp.com/api/v1/transit_list/', {mode: 'cors'})
       .then(response => response.json())
       .then(MyJson => {
-        this.props.dispatch(toggleLoading())
+        this.props.dispatch(toggleLoading('transit'))
         let pumpArray = [];
         MyJson.map((entry) =>{
           if ([entry.transferfrom, entry.transferto].some((condition) =>
@@ -82,7 +82,7 @@ class Transit extends Component {
       }
 
     });
-    this.props.dispatch(toggleLoading())
+    this.props.dispatch(toggleLoading('transit'))
     fetch('https://odessafleettracker.herokuapp.com/api/v1/transit_list/', { //TODO: Update Url
       method:'POST',
       mode: 'cors',
@@ -92,7 +92,7 @@ class Transit extends Component {
       }
         }
       ).then( () => {
-        this.props.dispatch(toggleLoading())
+        this.props.dispatch(toggleLoading('transit'))
         this.props.toggleNotification('transit')
       this.populate_transit()}).catch(error =>
         this.handleError()
@@ -128,7 +128,7 @@ class Transit extends Component {
 function mapStateToProps(state){
   return {
     authedUser: state.authedUser,
-    loading: state.loading
+    loading: state.loading.transit
   }
 }
 
