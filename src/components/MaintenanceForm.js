@@ -101,36 +101,47 @@ class MaintenanceForm extends React.Component {
         packing_brass: this.state.packing_brass,
         packing_nobrass: this.state.packing_nobrass,
         maintenance_type: maintenance_type,
-        hole_1_life: this.props.holehours[0],
-        hole_2_life: this.props.holehours[1],
-        hole_3_life: this.props.holehours[2],
-        hole_4_life: this.props.holehours[3],
-        hole_5_life: this.props.holehours[4]
+        hole_1_life: this.state.pump_hours - this.props.holehours[0],
+        hole_2_life: this.state.pump_hours - this.props.holehours[1],
+        hole_3_life: this.state.pump_hours - this.props.holehours[2],
+        hole_4_life: this.state.pump_hours - this.props.holehours[3],
+        hole_5_life: this.state.pump_hours - this.props.holehours[4]
       }),
       headers:{
         'Content-Type': 'application/json'
       }
         }
       ).then((response) => {
-          this.setState({
-            pump_hours: '',
-            hole: '',
-            open: true,
-            suction_valves: '',
-            suction_seats: '',
-            discharge_valves: '',
-            discharge_seats: '',
-            suction_spring: '',
-            discharge_spring: '',
-            packing_brass: '',
-            packing_nobrass: '',
-            treater: '',
-            grease_pressure: '',
-            error: error,
-          })
-              }).catch((error) => this.setState({
+          fetch('https://odessafleettracker.herokuapp.com/api/v1/update_pump_hours/',{ // TODO: replace url
+            method:'POST',
+            mode: 'cors',
+            body: JSON.stringify([{'unitnumber': this.props.unitnumber, 'pumphours': parseInt(this.state.pump_hours)}]),
+            headers:{
+              'Content-Type': 'application/json'
+            }
+          }).then(
+            this.setState({
+              pump_hours: '',
+              hole: '',
+              open: true,
+              suction_valves: '',
+              suction_seats: '',
+              discharge_valves: '',
+              discharge_seats: '',
+              suction_spring: '',
+              discharge_spring: '',
+              packing_brass: '',
+              packing_nobrass: '',
+              treater: '',
+              grease_pressure: '',
+              error: error,
+            })
+          )
+        }).catch((error) => {
+              console.log(error)
+              this.setState({
               errorSubmit: true
-            }))
+            })})
 
           } else {
               this.setState({

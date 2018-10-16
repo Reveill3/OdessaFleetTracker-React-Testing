@@ -12,13 +12,19 @@ import HomePage from './components/HomePage'
 
 const store = createStore(reducer, composeWithDevTools(middleware))
 let crew = $("#my-data").data('name')
+let homePage = document.getElementById('home-page')
+let app = document.getElementById('root')
 console.log(crew)
+
+if (app){
 ReactDOM.render(
   <Provider store={store}>
     <App authedUser={crew}/>
   </Provider>
-  , document.getElementById('root'));
+  , document.getElementById('root'));}
 
+if (homePage) {
   ReactDOM.render(
       <HomePage />
     , document.getElementById('home-page'));
+}

@@ -53,7 +53,8 @@ const cardSource = {
       standby: props.standby,
       movement: props.movement,
       maintenance: props.maintenance,
-      holehours: props.holehours
+      holehours: props.current_holehours,
+      previous_hours: props.holehours
     }
   },
 
@@ -70,7 +71,8 @@ drop(props, monitor, component) {
     const movement = monitor.getItem().movement
     const maintenance = monitor.getItem().maintenance
     const holehours = monitor.getItem().holehours
-    props.moveCard(dragId, hoverIndex, dragstandby, maintenance, movement, holehours)
+    const previous_hours = monitor.getItem().previous_hours
+    props.moveCard(dragId, hoverIndex, dragstandby, maintenance, movement, holehours, previous_hours)
   },
 }
 
@@ -154,7 +156,7 @@ class PumpCard extends React.Component {
                 </Grid>
                 {this.props.type === 'Pumps' ?
                 <Grid item xs={12}>
-                <DataTable holehours={this.props.holehours}/>
+                <DataTable holehours={this.props.current_holehours}/>
                 </Grid>
                 :null}
                 <Grid item xs={12}>

@@ -91,7 +91,7 @@ class EquipmentCategory extends Component {
     })
   }
 
-  addCard = (dragId, movement, maintenance, holehours) => {
+  addCard = (dragId, movement, maintenance, holehours, previous_hours) => {
     const { dispatch } = this.props
     const dragIndex = this.props.equipment.findIndex(x => x.text === dragId)
     const newItem =      this.state.standbyToggle ?  {
@@ -104,6 +104,7 @@ class EquipmentCategory extends Component {
             hole_3_life: holehours[2],
             hole_4_life: holehours[3],
             hole_5_life: holehours[4],
+            previous_hours: previous_hours
           } : {
                   unitnumber: dragId,
                   standby: true,
@@ -114,11 +115,12 @@ class EquipmentCategory extends Component {
                   hole_3_life: holehours[2],
                   hole_4_life: holehours[3],
                   hole_5_life: holehours[4],
+                  previous_hours: previous_hours
                 }
     dispatch(transferEquipment(dragId, newItem, this.props.type))
   }
 
-  moveCard = (dragId, hoverIndex, dragstandby, maintenance, movement, holehours) => {
+  moveCard = (dragId, hoverIndex, dragstandby, maintenance, movement, holehours, previous_hours) => {
     const { dispatch } = this.props
     const dragIndex = this.props.equipment.findIndex(x => x.unitnumber === dragId)
     console.log(this.props.equipment[hoverIndex])
@@ -136,6 +138,7 @@ class EquipmentCategory extends Component {
                        hole_3_life: holehours[2],
                        hole_4_life: holehours[3],
                        hole_5_life: holehours[4],
+                       previous_hours: previous_hours
                      }
                      :
                     {
@@ -148,6 +151,7 @@ class EquipmentCategory extends Component {
                       hole_3_life: holehours[2],
                       hole_4_life: holehours[3],
                       hole_5_life: holehours[4],
+                      previous_hours: previous_hours
                     }
     const hoverCard = {
                       unitnumber: this.props.equipment[hoverIndex].unitnumber,
@@ -159,6 +163,7 @@ class EquipmentCategory extends Component {
                       hole_3_life: this.props.equipment[hoverIndex].hole_3_life,
                       hole_4_life: this.props.equipment[hoverIndex].hole_4_life,
                       hole_5_life: this.props.equipment[hoverIndex].hole_5_life,
+                      previous_hours: this.props.equipment[hoverIndex].previous_hours
                         }
 
     dispatch(transitionEquipment(dragCard, hoverCard, hoverIndex, this.props.type))
@@ -173,6 +178,7 @@ updateLoading: false
 
 
   render() {
+    console.log(this.props.inline)
     const { classes } = this.props
     const inline =   this.props.equipment.filter(card => !card.standby)
     const standby = this.props.equipment.filter(card => card.standby)
@@ -206,16 +212,23 @@ updateLoading: false
                 toggleNotification={this.props.toggleNotification}
                 maintenance={card.maintenance}
                 movement={card.movement}
-                holehours={[card.hole_1_life,
-                          card.hole_2_life,
-                          card.hole_3_life,
-                          card.hole_4_life,
-                          card.hole_5_life]}
+                holehours={[card.previous_hours.hole_1,
+                          card.previous_hours.hole_2,
+                          card.previous_hours.hole_3,
+                          card.previous_hours.hole_4,
+                          card.previous_hours.hole_5]}
+              current_holehours={[card.hole_1_life,
+                                    card.hole_2_life,
+                                    card.hole_3_life,
+                                    card.hole_4_life,
+                                    card.hole_5_life
+                                  ]}
               />
             )
           )
         }
-        </Paper>
+      </Paper>
+
       </Grid>
           <Grid item xs={5}>
             <h3>Standby</h3>
@@ -238,16 +251,22 @@ updateLoading: false
                   toggleNotification={this.props.toggleNotification}
                   maintenance={card.maintenance}
                   movement={card.movement}
-                  holehours={[card.hole_1_life,
-                            card.hole_2_life,
-                            card.hole_3_life,
-                            card.hole_4_life,
-                            card.hole_5_life]}
+                  holehours={[card.previous_hours.hole_1,
+                            card.previous_hours.hole_2,
+                            card.previous_hours.hole_3,
+                            card.previous_hours.hole_4,
+                            card.previous_hours.hole_5]}
+                  current_holehours={[card.hole_1_life,
+                                        card.hole_2_life,
+                                        card.hole_3_life,
+                                        card.hole_4_life,
+                                        card.hole_5_life
+                                      ]}
                 />
               )
             )
           }
-              </Paper>
+        </Paper>
             </Grid>
           <Grid item xs={2}>
             <InlineDrop
@@ -301,11 +320,17 @@ updateLoading: false
                         toggleNotification={this.props.toggleNotification}
                         maintenance={card.maintenance}
                         movement={card.movement}
-                        holehours={[card.hole_1_life,
-                                  card.hole_2_life,
-                                  card.hole_3_life,
-                                  card.hole_4_life,
-                                  card.hole_5_life]}
+                        holehours={[card.previous_hours.hole_1,
+                                  card.previous_hours.hole_2,
+                                  card.previous_hours.hole_3,
+                                  card.previous_hours.hole_4,
+                                  card.previous_hours.hole_5]}
+                        current_holehours={[card.hole_1_life,
+                                              card.hole_2_life,
+                                              card.hole_3_life,
+                                              card.hole_4_life,
+                                              card.hole_5_life
+                                            ]}
                       />
                     )
                   )
