@@ -31,7 +31,6 @@ export default function handleInitialData (crew) {
           response => response.json()
         ).then(
           (data) => {
-            console.log(data)
             dispatch(receiveEquipment(data.equipment, data.type +'s'))
             dispatch(toggleLoading(data.type))
           }

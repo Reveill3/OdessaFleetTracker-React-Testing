@@ -51,7 +51,8 @@ class Transit extends Component {
               yours: this.props.authedUser === getCrewColor(entry.transferfrom), //TODO: connected to authedUser
               details: entry.details,
               type: entry.type,
-              unit: entry.unit
+              unit: entry.unit,
+              driver: entry.driver
             })}})
         this.setState(
           {

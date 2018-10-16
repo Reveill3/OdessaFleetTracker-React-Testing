@@ -178,7 +178,6 @@ updateLoading: false
 
 
   render() {
-    console.log(this.props.inline)
     const { classes } = this.props
     const inline =   this.props.equipment.filter(card => !card.standby)
     const standby = this.props.equipment.filter(card => card.standby)

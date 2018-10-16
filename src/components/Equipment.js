@@ -12,6 +12,8 @@ const Equipment = props => {
             <ListGroupItemText>{equipment.message}</ListGroupItemText>
             <h3>Reason:</h3>
             <ListGroupItemText>{equipment.details}</ListGroupItemText>
+            <h3>Driver:</h3>
+            <ListGroupItemText>{equipment.driver}</ListGroupItemText>
           </div>
           <Button color={(equipment.yours && equipment.isCancelled) ? 'warning':
             (equipment.isCancelled) ? 'success' : 'danger'}

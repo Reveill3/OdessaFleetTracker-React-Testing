@@ -79,7 +79,7 @@ class MaintenanceForm extends React.Component {
   };
 
   handleSubmit = () => {
-    const error = this.state.pump_hours === '' | this.state.hole === '' | this.state.treater === ''
+    const error = this.state.pump_hours === '' | this.state.hole === '' | this.state.treater === '' | isNaN(this.state.pump_hours)
     const maintenance_type = this.state.display === 'vs' ? 'valves & seats': 'packing'
     if (error != true)
 {    fetch('https://odessafleettracker.herokuapp.com/api/v1/log_maintenance/',{ // TODO: replace url
@@ -208,7 +208,7 @@ class MaintenanceForm extends React.Component {
       </Grid>
     </Grid>
     const message = this.state.errorSubmit ? 'There was an error submitting. Please try again.'
-    : this.state.error ? 'Please Completely Fill Out The Form'
+    : this.state.error ? 'Please Completely Fill Out The Form. Pump hours must be a number.'
     : 'Maintenance Logged for ' + this.props.unitnumber
 
 

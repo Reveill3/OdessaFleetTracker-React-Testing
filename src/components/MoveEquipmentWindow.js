@@ -16,9 +16,13 @@ import flow from 'lodash/flow';
 import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {removeEquipment, addEquipment} from '../actions/equipment'
+import Grid from '@material-ui/core/Grid';
 
 
 const styles = theme => ({
+  root: {
+    flexGrow: 1,
+  },
   container: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -82,6 +86,7 @@ class MoveEquipmentWindow extends React.Component {
     reason: '',
     loading: false,
     success: false,
+    driver: '',
   };
 
   crews = ['Onyx', 'Blue', 'Red', 'Green', 'Gold', 'Yard']
@@ -102,6 +107,7 @@ class MoveEquipmentWindow extends React.Component {
       reason: '',
       loading: false,
       success: false,
+      driver:''
      });
   };
 
@@ -119,6 +125,7 @@ class MoveEquipmentWindow extends React.Component {
       treater: '',
       transferTo: '',
       reason: '',
+      driver:''
     }) } else {
     this.props.dispatch(removeEquipment(this.props.unitnumber, this.props.type))
     fetch('https://odessafleettracker.herokuapp.com/api/v1/move_equipment/',{ // TODO: replace url
@@ -129,7 +136,8 @@ class MoveEquipmentWindow extends React.Component {
         treater: this.state.treater,
         transferTo: this.state.transferTo.toLowerCase(),
         reason: this.state.reason,
-        crewFrom: this.props.authedUser //TODO: link to logged in users crew
+        crewFrom: this.props.authedUser, //TODO: link to logged in users crew
+        driver: this.state.driver
       }),
       headers:{
         'Content-Type': 'application/json'
@@ -156,60 +164,83 @@ class MoveEquipmentWindow extends React.Component {
           open={this.state.open}
           onClose={this.handleClose}
         >
-          <div className='row'>
-          <DialogTitle className='col-6'>Send Equipment</DialogTitle>
-          </div>
+          <div className={classes.root}>
+          <Grid container spacing={24}>
+          <Grid item xs={12}>
+            <DialogTitle>Send Equipment</DialogTitle>
+          </Grid>
           { this.state.success ? null :
             <div>
               <DialogContent>
                 <form className={classes.container}>
-                  <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="treater">Supervisor Name</InputLabel>
-                    <Select
-                      native
-                      value={this.state.treater}
-                      onChange={this.handleChange('treater')}
-                      input={<Input id="treater" />}
-                    >
-                      <option value="" />
-                      { treaters.treaters.map(treater =>
-                      <option key={treater.name} value={treater.name}>{treater.name}</option>
-                        )
-                      }
+                  <Grid item xs={4}>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel htmlFor="treater">Supervisor Name</InputLabel>
+                      <Select
+                        native
+                        value={this.state.treater}
+                        onChange={this.handleChange('treater')}
+                        input={<Input id="treater" />}
+                      >
+                        <option value="" />
+                        { treaters.treaters.map(treater =>
+                        <option key={treater.name} value={treater.name}>{treater.name}</option>
+                          )
+                        }
 
 
-                    </Select>
-                  </FormControl>
-                  <FormControl className={classes.formControl}>
-                  <InputLabel htmlFor="sendto">Send To</InputLabel>
-                  <Select
-                    native
-                    value={this.state.transferTo}
-                    onChange={this.handleChange('transferTo')}
-                    input={<Input id="sendto" />}
-                  >
-                    <option value="" />
-                    { this.crews.map(crew =>
-                    <option key={crew} value={crew}>{crew}</option>
-                      )
-                    }
-
-
-                  </Select>
-                  </FormControl>
-                  <TextField
-                    id="standard-full-width"
-                    label="Why are you sending it?"
-                    style={{ margin: 8 }}
-                    placeholder="Enter Description Here"
-                    fullWidth
-                    margin="normal"
-                    value={this.state.reason}
-                    onChange={this.handleChange('reason')}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel htmlFor="sendto">Send To</InputLabel>
+                      <Select
+                        native
+                        value={this.state.transferTo}
+                        onChange={this.handleChange('transferTo')}
+                        input={<Input id="sendto" />}
+                      >
+                        <option value="" />
+                        { this.crews.map(crew =>
+                        <option key={crew} value={crew}>{crew}</option>
+                          )
+                        }
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <FormControl className={classes.formControl}>
+                      <TextField
+                        id="standard-full-width"
+                        label="Whos Driving?"
+                        style={{ margin: 8 }}
+                        placeholder="Enter Name Here"
+                        fullWidth
+                        margin="normal"
+                        value={this.state.reason}
+                        onChange={this.handleChange('driver')}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="standard-full-width"
+                      label="Why are you sending it?"
+                      style={{ margin: 8 }}
+                      placeholder="Enter Description Here"
+                      fullWidth
+                      margin="normal"
+                      value={this.state.reason}
+                      onChange={this.handleChange('reason')}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
                 </form>
               </DialogContent>
               <DialogActions>
@@ -220,9 +251,11 @@ class MoveEquipmentWindow extends React.Component {
                   {this.state.loading ? <CircularProgress/> : 'Send'}
                 </Button>
               </DialogActions>
+
             </div>
             }
-
+          </Grid>
+            </div>
         </Dialog>
       </div>
     );
