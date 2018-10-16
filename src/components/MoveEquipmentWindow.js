@@ -218,7 +218,7 @@ class MoveEquipmentWindow extends React.Component {
                         placeholder="Enter Name Here"
                         fullWidth
                         margin="normal"
-                        value={this.state.reason}
+                        value={this.state.driver}
                         onChange={this.handleChange('driver')}
                         InputLabelProps={{
                           shrink: true,
