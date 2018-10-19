@@ -17,6 +17,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import flow from 'lodash/flow';
 import { connect } from 'react-redux';
+import Input from '@material-ui/core/Input';
+
 
 const styles = theme => ({
   root: {
@@ -66,7 +68,7 @@ class MainForm extends React.Component {
     open: false,
     unitnumber: this.props.unitnumber,
     crew: this.props.authedUser,
-    treater: 'Dedron Sells',
+    treater: '',
     ['pump_hours']: 0,
     ["grease_pressure1"]: 0,
     ["grease_pressure2"]: 0,
@@ -496,7 +498,6 @@ class MainForm extends React.Component {
   };
 
   render() {
-    console.log(this.state);
     const keys = Object.keys(this.state)
     const errorFilter = keys.filter(key => key.includes('pump') | key.includes('grease') && this.state[key] === '' | isNaN(this.state[key]) | this.state['pump_hours'] === 0)
     const error = errorFilter.length > 0 ? true:false
@@ -732,6 +733,23 @@ class MainForm extends React.Component {
                   </FormControl>
                 </Grid>
               ))}
+              <Grid item xs={12}>
+                <FormControl className={classes.formControl}>
+                  <InputLabel htmlFor="treater">Supervisor Name</InputLabel>
+                  <Select
+                    native
+                    value={this.state.treater}
+                    onChange={this.handleSelectChange('treater')}
+                    input={<Input id="treater" />}
+                  >
+                    <option value="" />
+                    { this.props.treaters.treaters.map(treater =>
+                    <option key={treater.name} value={treater.name}>{treater.name}</option>
+                      )
+                    }
+                  </Select>
+                </FormControl>
+              </Grid>
 
               <Grid item xs={12}>
                 <Button
