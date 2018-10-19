@@ -19,7 +19,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Button from '@material-ui/core/Button';
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import MoveEquipmentWindow from './MoveEquipmentWindow'
-import MaintenanceForm from './MaintenanceForm'
+import MainForm from './MaintenanceFormNOC'
 import DataTable from './DataTable'
 import Grid from '@material-ui/core/Grid';
 
@@ -161,7 +161,7 @@ class PumpCard extends React.Component {
                 :null}
                 <Grid item xs={12}>
                   <MoveEquipmentWindow toggleNotification={this.props.toggleNotification} handleError={this.props.handleError} unitnumber={this.props.text} type={this.props.type} className='col-6'/>
-                  { this.props.type === 'Pumps' ? <MaintenanceForm holehours={this.props.holehours} unitnumber={this.props.text}/> : null}
+                  { this.props.type === 'Pumps' ? <MainForm toggleNotification={this.props.toggleNotification} holehours={this.props.holehours} unitnumber={this.props.text}/> : null}
                 </Grid>
                 </Grid>
               </ExpansionPanelDetails>
