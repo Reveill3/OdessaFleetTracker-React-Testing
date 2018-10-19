@@ -22,9 +22,7 @@ import Input from '@material-ui/core/Input';
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
-    maxWidth: 1000,
-    minWidth: 850,
+    flexGrow: 1
   },
   section: {
     marginBottom: 10,
