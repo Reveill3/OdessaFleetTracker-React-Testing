@@ -98,6 +98,7 @@ class PumpCard extends React.Component {
 
 
   render() {
+    console.log(this.props)
     const { classes } = this.props
     // Your component receives its own props as usual
     const { id,
