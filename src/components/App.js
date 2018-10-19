@@ -83,20 +83,28 @@ class App extends Component {
           return numberMessage
 
         case 'maintenance':
-          const maintenanceMessage = 'Pump hours and grease pressures must be a number. If you did packing you have to enter the grease pressure.'
+          const maintenanceMessage = 'Must use some parts. Pump hours and grease pressures must be a number. If you did packing you have to enter the grease pressure.'
           this.setState({
             notification: true,
             message: maintenanceMessage
           })
           return maintenanceMessage
 
-          case 'maintenance_success':
-            const maintenanceSuccess = 'Maintenance Logged Succesfully'
-            this.setState({
-              notification: true,
-              message: maintenanceSuccess
-            })
-            return maintenanceSuccess
+        case 'maintenance_success':
+          const maintenanceSuccess = 'Maintenance Logged Succesfully'
+          this.setState({
+            notification: true,
+            message: maintenanceSuccess
+          })
+          return maintenanceSuccess
+
+        case 'pumpHours':
+          const maintenanceHourFailure = 'You cannot log maintenance with less pump hours than current pump hours.'
+          this.setState({
+            notification: true,
+            message: maintenanceHourFailure
+          })
+          return maintenanceHourFailure
 
       default:
       const message = 'There was a network error. Please try again later.'

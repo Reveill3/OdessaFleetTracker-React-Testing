@@ -67,12 +67,12 @@ class MainForm extends React.Component {
     unitnumber: this.props.unitnumber,
     crew: this.props.authedUser,
     treater: '',
-    ['pump_hours']: 0,
-    ["grease_pressure1"]: 0,
-    ["grease_pressure2"]: 0,
-    ["grease_pressure3"]: 0,
-    ["grease_pressure4"]: 0,
-    ["grease_pressure5"]: 0,
+    ['pump_hours']: '',
+    ["grease_pressure1"]: '',
+    ["grease_pressure2"]: '',
+    ["grease_pressure3"]: '',
+    ["grease_pressure4"]: '',
+    ["grease_pressure5"]: '',
     ["Discharge Seat1"]: false,
     ["Discharge Seat2"]: false,
     ["Discharge Seat3"]: false,
@@ -154,9 +154,9 @@ class MainForm extends React.Component {
     open: true,
     unitnumber: this.props.unitnumber,
     crew: this.props.authedUser,
-    treater: 'Dedron Sells',
-    ['pump_hours']: 0,
-    ["grease_pressure1"]: 0,
+    treater: '',
+    ['pump_hours']: '',
+    ["grease_pressure1"]:0,
     ["grease_pressure2"]: 0,
     ["grease_pressure3"]: 0,
     ["grease_pressure4"]: 0,
@@ -252,15 +252,14 @@ class MainForm extends React.Component {
   };
 
   handleSelectChange = name => event => {
-    console.log(event.target.value)
-    event.target.value === '' ? this.setState({ [name]: 0 }) : name === 'pump_hours' ? this.setState({ [name]: parseInt(event.target.value) })
+    event.target.value === '' ? this.setState({ [name]: null }) : name === 'pump_hours' ? this.setState({ [name]: parseInt(event.target.value) })
     :
     this.setState({ [name]: event.target.value });
   };
 
   handleSubmit = (error) => {
     const keys = Object.keys(this.state)
-    const vsHoles = keys.filter(key => key.includes('Valve') | key.includes('Seat') && this.state[key] !== false && !isNaN(key.slice(-1)) ).map(item => item.slice(-1))
+    const vsHoles = keys.filter(key => key.includes('Valve') | key.includes('Seat') | key.includes('Packing') && this.state[key] !== false && !isNaN(key.slice(-1)) ).map(item => item.slice(-1))
     const toUpdate = [...new Set(vsHoles)]
 
     if (!error)
@@ -297,6 +296,9 @@ class MainForm extends React.Component {
               this.setState(this.blankState)
             })} else {
               this.setState(this.blankState)
+              this.props.current_pumphours > this.state.pump_hours ?
+              this.props.toggleNotification('pumpHours')
+              :
               this.props.toggleNotification('maintenance')
             }
 
@@ -496,9 +498,10 @@ class MainForm extends React.Component {
   };
 
   render() {
+    console.log(this.props)
     const keys = Object.keys(this.state)
     const errorFilter = keys.filter(key => key.includes('pump') | key.includes('grease') && this.state[key] === '' | isNaN(this.state[key]) | this.state['pump_hours'] === 0)
-    const error = errorFilter.length > 0 ? true:false
+    const error = errorFilter.length > 0 | this.props.current_pumphours > this.state.pump_hours ? true:false
     const { classes } = this.props;
     const count = new Array().fill();
     const holes = ["Hole 1", "Hole 2", "Hole 3", "Hole 4", "Hole 5"];
@@ -702,6 +705,11 @@ class MainForm extends React.Component {
                 >
                   Uncheck All
                 </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="h6" color="inherit" className={classes.flex}>
+                  Current Pump Hours: {this.props.current_pumphours}
+                </Typography>
               </Grid>
               <Grid item xs={12}>
                 <FormControl className={classes.formControl}>

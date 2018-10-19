@@ -91,7 +91,7 @@ class EquipmentCategory extends Component {
     })
   }
 
-  addCard = (dragId, movement, maintenance, holehours, previous_hours) => {
+  addCard = (dragId, movement, maintenance, holehours, previous_hours, current_pumphours) => {
     const { dispatch } = this.props
     const dragIndex = this.props.equipment.findIndex(x => x.text === dragId)
     const newItem =      this.state.standbyToggle ?  {
@@ -104,7 +104,8 @@ class EquipmentCategory extends Component {
             hole_3_life: holehours[2],
             hole_4_life: holehours[3],
             hole_5_life: holehours[4],
-            previous_hours: previous_hours
+            previous_hours: previous_hours,
+            pump_hours: current_pumphours
           } : {
                   unitnumber: dragId,
                   standby: true,
@@ -115,12 +116,13 @@ class EquipmentCategory extends Component {
                   hole_3_life: holehours[2],
                   hole_4_life: holehours[3],
                   hole_5_life: holehours[4],
-                  previous_hours: previous_hours
+                  previous_hours: previous_hours,
+                  pump_hours: current_pumphours
                 }
     dispatch(transferEquipment(dragId, newItem, this.props.type))
   }
 
-  moveCard = (dragId, hoverIndex, dragstandby, maintenance, movement, holehours, previous_hours) => {
+  moveCard = (dragId, hoverIndex, dragstandby, maintenance, movement, holehours, previous_hours, current_pumphours) => {
     const { dispatch } = this.props
     const dragIndex = this.props.equipment.findIndex(x => x.unitnumber === dragId)
     console.log(this.props.equipment[hoverIndex])
@@ -138,7 +140,8 @@ class EquipmentCategory extends Component {
                        hole_3_life: holehours[2],
                        hole_4_life: holehours[3],
                        hole_5_life: holehours[4],
-                       previous_hours: previous_hours
+                       previous_hours: previous_hours,
+                       pump_hours: current_pumphours
                      }
                      :
                     {
@@ -151,9 +154,11 @@ class EquipmentCategory extends Component {
                       hole_3_life: holehours[2],
                       hole_4_life: holehours[3],
                       hole_5_life: holehours[4],
-                      previous_hours: previous_hours
+                      previous_hours: previous_hours,
+                      pump_hours: current_pumphours
                     }
     const hoverCard = {
+                      pump_hours: this.props.equipment[hoverIndex].pump_hours,
                       unitnumber: this.props.equipment[hoverIndex].unitnumber,
                       standby: this.props.equipment[dragIndex].standby ? true:false,
                       maintenance: this.props.equipment[hoverIndex].maintenance.slice(Math.max(this.props.equipment[hoverIndex].maintenance.length - 3, 1)),
@@ -196,6 +201,7 @@ updateLoading: false
             { this.props.loading ? <CircularProgress /> :
               inline.map((card, index) => (
               <PumpCard
+                current_pumphours = {card.pump_hours}
                 id={card.unitnumber}
                 key={card.unitnumber}
                 index={this.props.equipment.findIndex(x => x.unitnumber === card.unitnumber)}
@@ -235,6 +241,7 @@ updateLoading: false
               { this.props.loading ? <CircularProgress /> :
                 standby.map((card, index) => (
                 <PumpCard
+                  current_pumphours = {card.pump_hours}
                   id={card.unitnumber}
                   key={card.unitnumber}
                   index={this.props.equipment.findIndex(x => x.unitnumber === card.unitnumber)}

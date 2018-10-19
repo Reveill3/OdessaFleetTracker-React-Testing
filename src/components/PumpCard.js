@@ -54,7 +54,8 @@ const cardSource = {
       movement: props.movement,
       maintenance: props.maintenance,
       holehours: props.current_holehours,
-      previous_hours: props.holehours
+      previous_hours: props.holehours,
+      current_pumphours: props.current_pumphours
     }
   },
 
@@ -72,7 +73,8 @@ drop(props, monitor, component) {
     const maintenance = monitor.getItem().maintenance
     const holehours = monitor.getItem().holehours
     const previous_hours = monitor.getItem().previous_hours
-    props.moveCard(dragId, hoverIndex, dragstandby, maintenance, movement, holehours, previous_hours)
+    const current_pumphours = monitor.getItem().current_pumphours
+    props.moveCard(dragId, hoverIndex, dragstandby, maintenance, movement, holehours, previous_hours, current_pumphours)
   },
 }
 
@@ -162,7 +164,7 @@ class PumpCard extends React.Component {
                 :null}
                 <Grid item xs={12}>
                   <MoveEquipmentWindow toggleNotification={this.props.toggleNotification} handleError={this.props.handleError} unitnumber={this.props.text} type={this.props.type} className='col-6'/>
-                  { this.props.type === 'Pumps' ? <MainForm toggleNotification={this.props.toggleNotification} holehours={this.props.holehours} unitnumber={this.props.text}/> : null}
+                  { this.props.type === 'Pumps' ? <MainForm current_pumphours = {this.props.current_pumphours} toggleNotification={this.props.toggleNotification} holehours={this.props.holehours} unitnumber={this.props.text}/> : null}
                 </Grid>
                 </Grid>
               </ExpansionPanelDetails>
