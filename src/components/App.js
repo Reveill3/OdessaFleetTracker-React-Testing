@@ -83,7 +83,7 @@ class App extends Component {
           return numberMessage
 
         case 'maintenance':
-          const maintenanceMessage = 'Must use some parts. Pump hours and grease pressures must be a number. If you did packing you have to enter the grease pressure.'
+          const maintenanceMessage = 'Must use some parts. Must inlcude a supervisor name. Pump hours and grease pressures must be a number. If you did packing you have to enter the grease pressure.'
           this.setState({
             notification: true,
             message: maintenanceMessage
@@ -105,6 +105,14 @@ class App extends Component {
             message: maintenanceHourFailure
           })
           return maintenanceHourFailure
+
+        case 'plunger':
+          const plungerError = 'Two types of plungers one hole?'
+          this.setState({
+            notification: true,
+            message: plungerError
+          })
+          return plungerError
 
       default:
       const message = 'There was a network error. Please try again later.'

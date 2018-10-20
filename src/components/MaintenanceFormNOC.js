@@ -18,6 +18,7 @@ import IconButton from '@material-ui/core/IconButton';
 import flow from 'lodash/flow';
 import { connect } from 'react-redux';
 import Input from '@material-ui/core/Input';
+import { updateHours } from '../actions/pumps'
 
 
 const styles = theme => ({
@@ -68,11 +69,11 @@ class MainForm extends React.Component {
     crew: this.props.authedUser,
     treater: '',
     ['pump_hours']: '',
-    ["grease_pressure1"]: '',
-    ["grease_pressure2"]: '',
-    ["grease_pressure3"]: '',
-    ["grease_pressure4"]: '',
-    ["grease_pressure5"]: '',
+    ["grease_pressure1"]: 0,
+    ["grease_pressure2"]: 0,
+    ["grease_pressure3"]: 0,
+    ["grease_pressure4"]: 0,
+    ["grease_pressure5"]: 0,
     ["Discharge Seat1"]: false,
     ["Discharge Seat2"]: false,
     ["Discharge Seat3"]: false,
@@ -257,10 +258,35 @@ class MainForm extends React.Component {
     this.setState({ [name]: event.target.value });
   };
 
-  handleSubmit = (error) => {
+  handleSubmit = (error, errorType) => {
     const keys = Object.keys(this.state)
     const vsHoles = keys.filter(key => key.includes('Valve') | key.includes('Seat') | key.includes('Packing') && this.state[key] !== false && !isNaN(key.slice(-1)) ).map(item => item.slice(-1))
     const toUpdate = [...new Set(vsHoles)]
+    const justVS = keys.filter(key => key.includes('Valve') | key.includes('Seat') && this.state[key] !== false && !isNaN(key.slice(-1))).map(item => item.slice(-1))
+    let lifeObjectLog = {
+            hole_1_life: 0,
+            hole_2_life: 0,
+            hole_3_life: 0,
+            hole_4_life: 0,
+            hole_5_life: 0,
+          }
+    justVS.forEach(hole => lifeObjectLog['hole_' + hole + '_life'] = this.state.pump_hours - this.props.holehours[parseInt(hole) - 1])
+    let lifeObjectDisplay = {
+            hole_1_life: this.state.pump_hours - this.props.holehours[0],
+            hole_2_life: this.state.pump_hours - this.props.holehours[1],
+            hole_3_life: this.state.pump_hours - this.props.holehours[2],
+            hole_4_life: this.state.pump_hours - this.props.holehours[3],
+            hole_5_life: this.state.pump_hours - this.props.holehours[4],
+          }
+    justVS.forEach(hole => lifeObjectDisplay['hole_' + hole + '_life'] = 0)
+    let newPrevHours = {
+      hole_1: this.props.holehours[0],
+      hole_2: this.props.holehours[1],
+      hole_3: this.props.holehours[2],
+      hole_4: this.props.holehours[3],
+      hole_5: this.props.holehours[4],
+    }
+    justVS.forEach(hole => newPrevHours['hole_' + hole] = this.state.pump_hours)
 
     if (!error)
 {    fetch('https://odessafleettracker.herokuapp.com/api/v1/log_maintenance/',{ // TODO: replace url
@@ -268,11 +294,7 @@ class MainForm extends React.Component {
       mode: 'cors',
       body: JSON.stringify({
         ...this.state,
-        hole_1_life: this.state.pump_hours - this.props.holehours[0],
-        hole_2_life: this.state.pump_hours - this.props.holehours[1],
-        hole_3_life: this.state.pump_hours - this.props.holehours[2],
-        hole_4_life: this.state.pump_hours - this.props.holehours[3],
-        hole_5_life: this.state.pump_hours - this.props.holehours[4],
+        ...lifeObjectLog,
         toUpdate: toUpdate
       }),
       headers:{
@@ -288,8 +310,19 @@ class MainForm extends React.Component {
               'Content-Type': 'application/json'
             }
           }).then(() =>{
-            this.setState(this.blankState)
-            this.props.toggleNotification('maintenance_success')}
+            this.props.toggleNotification('maintenance_success')
+            this.props.dispatch(updateHours(this.props.unitnumber, {
+              pump_hours: this.state.pump_hours,
+              hole_life: [lifeObjectDisplay.hole_1_life,
+              lifeObjectDisplay.hole_2_life,
+              lifeObjectDisplay.hole_3_life,
+              lifeObjectDisplay.hole_4_life,
+              lifeObjectDisplay.hole_5_life],
+              previous_hours: {
+                    ...newPrevHours
+              }
+            }))
+            this.setState(this.blankState)}
           )}
         ).catch((error) => {
               this.props.toggleNotification()
@@ -298,7 +331,8 @@ class MainForm extends React.Component {
               this.setState(this.blankState)
               this.props.current_pumphours > this.state.pump_hours ?
               this.props.toggleNotification('pumpHours')
-              :
+              : errorType === 'plunger' ?
+              this.props.toggleNotification('plunger'):
               this.props.toggleNotification('maintenance')
             }
 
@@ -498,13 +532,21 @@ class MainForm extends React.Component {
   };
 
   render() {
-    console.log(this.props)
+    console.log(this.state)
+    const holes = ["Hole 1", "Hole 2", "Hole 3", "Hole 4", "Hole 5"];
     const keys = Object.keys(this.state)
-    const errorFilter = keys.filter(key => key.includes('pump') | key.includes('grease') && this.state[key] === '' | isNaN(this.state[key]) | this.state['pump_hours'] === 0)
-    const error = errorFilter.length > 0 | this.props.current_pumphours > this.state.pump_hours ? true:false
+    let errorFilter = keys.filter(key => key.includes('pump') | key.includes('grease') && this.state[key] === '' | isNaN(this.state[key]) | this.state['pump_hours'] === 0 | this.state['treater'] === '')
+    holes.forEach(hole =>
+    this.state['Plunger' + hole.slice(-1)] === true && this.state['Clamp Plunger' + hole.slice(-1)] === true ?
+    errorFilter = errorFilter.concat(hole + ' Plunger'):null)
+    let errorType = null
+    errorFilter.forEach(item => item.includes('Plunger') ? errorType = 'plunger':null)
+    let error = errorFilter.length > 0 | this.props.current_pumphours > this.state.pump_hours ? true:false
     const { classes } = this.props;
     const count = new Array().fill();
-    const holes = ["Hole 1", "Hole 2", "Hole 3", "Hole 4", "Hole 5"];
+
+
+
     const vsLabels = [
       "Suction Valve",
       "Suction Seat",
@@ -762,7 +804,7 @@ class MainForm extends React.Component {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  onClick={() => this.handleSubmit(error)}
+                  onClick={() => this.handleSubmit(error, errorType)}
                 >
                   Submit Maintenance
                 </Button>

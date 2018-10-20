@@ -1,4 +1,5 @@
 import {RECEIVE_PUMPS , TRANSITION_PUMP, TRANSFER_PUMP, REMOVE_PUMP, ADD_PUMP} from '../actions/equipment'
+import { UPDATE_HOURS, UPDATE_PUMP_HOURS } from '../actions/pumps'
 
 export default function pumps (state=[], action){
   switch(action.type){
@@ -24,6 +25,31 @@ export default function pumps (state=[], action){
 
         case ADD_PUMP:
           return [...state, action.unitnumber]
+
+        case UPDATE_HOURS:
+          let editIndex = state.findIndex((unit) => unit.unitnumber === action.unitnumber)
+          const editedPumps = state.slice(0, editIndex).concat({...state[editIndex],
+            pump_hours: action.hoursObject.pump_hours,
+            hole_1_life: action.hoursObject.hole_life[0],
+            hole_2_life: action.hoursObject.hole_life[1],
+            hole_3_life: action.hoursObject.hole_life[2],
+            hole_4_life: action.hoursObject.hole_life[3],
+            hole_5_life: action.hoursObject.hole_life[4],
+            previous_hours: {...action.hoursObject.previous_hours}
+          }, state.slice(editIndex + 1))
+          return editedPumps
+
+          case UPDATE_PUMP_HOURS:
+            let hourUpdateIndex = state.findIndex((unit) => unit.unitnumber === action.unitnumber)
+            const editedHours = state.slice(0, hourUpdateIndex).concat({...state[hourUpdateIndex],
+              pump_hours: action.hours,
+              hole_1_life: action.hours - state[hourUpdateIndex].previous_hours.hole_1,
+              hole_2_life: action.hours - state[hourUpdateIndex].previous_hours.hole_2,
+              hole_3_life: action.hours - state[hourUpdateIndex].previous_hours.hole_3,
+              hole_4_life: action.hours - state[hourUpdateIndex].previous_hours.hole_4,
+              hole_5_life: action.hours - state[hourUpdateIndex].previous_hours.hole_5,
+            }, state.slice(hourUpdateIndex + 1))
+            return editedHours
 
 
       default:

@@ -1,27 +1,19 @@
-export const RECEIVE_PUMPS = 'RECEIVE_PUMPS'
-export const TRANSITION_PUMP = 'TRANSITION_PUMP'
-export const TRANSFER_PUMP = 'TRANSFER_PUMP'
+export const UPDATE_HOURS = 'UPDATE_HOURS'
+export const UPDATE_PUMP_HOURS = 'UPDATE_PUMP_HOURS'
 
-export function receivePumps (pumps) {
+
+export function updateHours(unitnumber, hoursObject) {
   return {
-    type: RECEIVE_PUMPS,
-    pumps
+    type: UPDATE_HOURS,
+    unitnumber,
+    hoursObject
   }
 }
 
-export function transitionPump (dragCard, hoverCard, index) {
+export function updatePumpHours(unitnumber, hours) {
   return {
-    type: TRANSITION_PUMP,
-    dragCard,
-    hoverCard,
-    index
-  }
-}
-
-export function transferPump (dragId, newItem) {
-  return {
-    type: TRANSFER_PUMP,
-    dragId,
-    newItem
+    type: UPDATE_PUMP_HOURS,
+    hours,
+    unitnumber
   }
 }

@@ -16,6 +16,7 @@ import Slide from '@material-ui/core/Slide';
 import { connect } from 'react-redux'
 import flow from 'lodash/flow';
 import TextField from '@material-ui/core/TextField';
+import { updatePumpHours } from '../actions/pumps'
 
 const styles = theme => ({
   root: {
@@ -55,13 +56,14 @@ handleSubmit = () => {
     }
       }
     ).then(() => {
+      this.state.toUpdate.forEach(pump => this.props.dispatch(updatePumpHours(pump.unitnumber, pump.pumphours)))
       this.props.toggleNotification('hours')
       this.setState({
         open:false,
         toUpdate: []
       })
     })
-    .catch(error => this.props.raiseError())
+    .catch(error => this.props.toggleNotification(''))
 }
 
   handleClickOpen = () => {
