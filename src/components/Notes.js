@@ -46,6 +46,9 @@ class Notes extends Component {
     this.setState({ [name]: event.target.value });
   }
 
+  notesAdded = 0
+
+
   handleAddNote = event => {
     const error = this.state.details === undefined | this.state.details === ''
     | this.state.note === undefined | this.state.note === ''
@@ -59,10 +62,14 @@ class Notes extends Component {
       treater: '',
     })
   } else {
+    this.notesAdded = this.notesAdded + 1
+    console.log(this.props.notes[0].totalNotes + this.notesAdded)
     this.props.dispatch(
       addNote(
         this.props.unitnumber,
         {
+      id: 'new',
+      noteNum: this.props.notes[0].totalNotes + this.notesAdded,
       title: this.state.note,
       details: this.state.details,
       treater: this.state.treater
@@ -73,6 +80,7 @@ class Notes extends Component {
       method:'POST',
       mode: 'cors',
       body: JSON.stringify({
+        number: this.props.notes[0].totalNotes + this.notesAdded,
         title: this.state.note,
         details: this.state.details,
         supervisor: this.state.treater,
@@ -98,12 +106,15 @@ class Notes extends Component {
 
   }
 
-  handleDelete = (index, treater, details, title) => {
+  handleDelete = (index, recId, treater, details, title, noteNum) => {
+    console.log(noteNum)
     this.props.dispatch(removeNote(index, this.props.unitnumber, this.props.type))
     fetch('https://odessafleettracker.herokuapp.com/api/v1/delete_note/',{ // TODO: replace url
       method:'POST',
       mode: 'cors',
       body: JSON.stringify({
+        noteNum: noteNum,
+        recId: recId,
         unitnumber: this.props.unitnumber
       }),
       headers:{
@@ -115,6 +126,8 @@ class Notes extends Component {
           addNote(
             this.props.unitnumber,
             {
+          notNum: noteNum,
+          id: recId,
           title: title,
           details: details,
           treater: treater
@@ -156,7 +169,7 @@ class Notes extends Component {
                 </Grid>
 
                 {this.props.notes.map((note, index) => (
-                  <Note key={index} note={note} index={index} deleteNote={(index) => this.handleDelete(index)}/>
+                  <Note key={index} note={note} index={index} deleteNote={this.handleDelete}/>
                 ))}
                 <Grid item xs={12}>
                   <FormControl className={classes.formControl}>

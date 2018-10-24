@@ -47,7 +47,10 @@ function Note (props) {
           <Grid item xs={2}>
             <Tooltip title="Delete">
               <IconButton aria-label="Delete">
-                <DeleteIcon onClick={() => props.deleteNote(props.index, props.note.treater, props.note.details, props.note.title)}/>
+                <DeleteIcon onClick={() => props.deleteNote(props.index, props.note.id,
+                  props.note.treater,
+                  props.note.details, props.note.title, props.note.noteNum
+                )}/>
               </IconButton>
             </Tooltip>
           </Grid>
