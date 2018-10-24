@@ -38,6 +38,25 @@ export const ADD_FLOAT = 'ADD_FLOAT'
 export const ADD_MISSILE = 'ADD_MISSILE'
 export const ADD_DATAVAN = 'ADD_DATAVAN'
 export const ADD_CREWVAN = 'ADD_CREWVAN'
+export const ADD_CREWVAN_NOTE = 'ADD_CREWVAN_NOTE'
+export const ADD_BLENDER_NOTE = 'ADD_BLENDER_NOTE'
+export const ADD_HYDRATION_NOTE = 'ADD_HYDRATION_NOTE'
+export const ADD_FLOAT_NOTE = 'ADD_FLOAT_NOTE'
+export const ADD_MISSILE_NOTE = 'ADD_MISSILE_NOTE'
+export const ADD_DATAVAN_NOTE = 'ADD_DATAVAN_NOTE'
+export const ADD_PUMP_NOTE = 'ADD_PUMP_NOTE'
+export const ADD_CHEM_NOTE = 'ADD_CHEM_NOTE'
+export const REMOVE_CREWVAN_NOTE = 'REMOVE_CREWVAN_NOTE'
+export const REMOVE_BLENDER_NOTE = 'REMOVE_BLENDER_NOTE'
+export const REMOVE_HYDRATION_NOTE = 'REMOVE_HYDRATION_NOTE'
+export const REMOVE_FLOAT_NOTE = 'REMOVE_FLOAT_NOTE'
+export const REMOVE_MISSILE_NOTE = 'REMOVE_MISSILE_NOTE'
+export const REMOVE_DATAVAN_NOTE = 'REMOVE_DATAVAN_NOTE'
+export const REMOVE_PUMP_NOTE = 'REMOVE_PUMP_NOTE'
+export const REMOVE_CHEM_NOTE = 'REMOVE_CHEM_NOTE'
+
+
+
 
 
 
@@ -250,7 +269,6 @@ switch(type.toLowerCase()){
 }
 
 export function addEquipment (unitnumber, type) {
-  console.log(type)
   switch(type.toLowerCase()){
     case 'pump':
     return {
@@ -291,6 +309,112 @@ export function addEquipment (unitnumber, type) {
     return {
       type: ADD_CREWVAN,
       unitnumber
+    }
+  }
+}
+
+export function addNote (unitnumber, note, type) {
+  switch(type.toLowerCase()){
+    case 'pumps':
+    return {
+      type: ADD_PUMP_NOTE,
+      unitnumber,
+      note
+    }
+    case 'blenders':
+    return {
+      type: ADD_BLENDER_NOTE,
+      unitnumber,
+      note
+    }
+    case 'hydrations':
+    return {
+      type: ADD_HYDRATION_NOTE,
+      unitnumber,
+      note
+    }
+    case 'floats':
+    return {
+      type: ADD_FLOAT_NOTE,
+      unitnumber,
+      note
+    }
+    case 'missiles':
+    return {
+      type: ADD_MISSILE_NOTE,
+      unitnumber,
+      note
+    }
+    case 'chem_adds':
+    return {
+      type: ADD_CHEM_NOTE,
+      unitnumber,
+      note
+    }
+    case 'data_vans':
+    return {
+      type: ADD_DATAVAN_NOTE,
+      unitnumber,
+      note
+    }
+    case 'crew_vans':
+    return {
+      type: ADD_CREWVAN_NOTE,
+      unitnumber,
+      note
+    }
+  }
+}
+
+export function removeNote (index, unitnumber, type) {
+  switch(type.toLowerCase()){
+    case 'pumps':
+    return {
+      type: REMOVE_PUMP_NOTE,
+      unitnumber,
+      index
+    }
+    case 'blenders':
+    return {
+      type: REMOVE_BLENDER_NOTE,
+      unitnumber,
+      index
+    }
+    case 'hydrations':
+    return {
+      type: REMOVE_HYDRATION_NOTE,
+      unitnumber,
+      index
+    }
+    case 'floats':
+    return {
+      type: REMOVE_FLOAT_NOTE,
+      unitnumber,
+      index
+    }
+    case 'missiles':
+    return {
+      type: REMOVE_MISSILE_NOTE,
+      unitnumber,
+      index
+    }
+    case 'chem_adds':
+    return {
+      type: REMOVE_CHEM_NOTE,
+      unitnumber,
+      index
+    }
+    case 'data_vans':
+    return {
+      type: REMOVE_DATAVAN_NOTE,
+      unitnumber,
+      index
+    }
+    case 'crew_vans':
+    return {
+      type: REMOVE_CREWVAN_NOTE,
+      unitnumber,
+      index
     }
   }
 }

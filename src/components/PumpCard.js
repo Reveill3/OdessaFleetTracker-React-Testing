@@ -22,6 +22,7 @@ import MoveEquipmentWindow from './MoveEquipmentWindow'
 import MainForm from './MaintenanceFormNOC'
 import DataTable from './DataTable'
 import Grid from '@material-ui/core/Grid';
+import Notes from './Notes'
 
 // Drag sources and drop targets only interact
 // if they have the same string type.
@@ -55,7 +56,8 @@ const cardSource = {
       maintenance: props.maintenance,
       holehours: props.current_holehours,
       previous_hours: props.holehours,
-      current_pumphours: props.current_pumphours
+      current_pumphours: props.current_pumphours,
+      notes: props.notes
     }
   },
 
@@ -74,7 +76,8 @@ drop(props, monitor, component) {
     const holehours = monitor.getItem().holehours
     const previous_hours = monitor.getItem().previous_hours
     const current_pumphours = monitor.getItem().current_pumphours
-    props.moveCard(dragId, hoverIndex, dragstandby, maintenance, movement, holehours, previous_hours, current_pumphours)
+    const notes = monitor.getItem().notes
+    props.moveCard(dragId, hoverIndex, dragstandby, maintenance, movement, holehours, previous_hours, current_pumphours,notes)
   },
 }
 
@@ -100,7 +103,6 @@ class PumpCard extends React.Component {
 
 
   render() {
-    console.log(this.props)
     const { classes } = this.props
     // Your component receives its own props as usual
     const { id,
@@ -165,6 +167,7 @@ class PumpCard extends React.Component {
                 <Grid item xs={12}>
                   <MoveEquipmentWindow toggleNotification={this.props.toggleNotification} handleError={this.props.handleError} unitnumber={this.props.text} type={this.props.type} className='col-6'/>
                   { this.props.type === 'Pumps' ? <MainForm current_pumphours = {this.props.current_pumphours} toggleNotification={this.props.toggleNotification} holehours={this.props.holehours} unitnumber={this.props.text}/> : null}
+                  <Notes notes={this.props.notes} unitnumber={this.props.id} type={this.props.type} toggleNotification={this.props.toggleNotification}/>
                 </Grid>
                 </Grid>
               </ExpansionPanelDetails>

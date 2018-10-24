@@ -16,8 +16,9 @@ const addTarget = {
     const holehours = monitor.getItem().holehours
     const previous_hours = monitor.getItem().previous_hours
     const current_pumphours = monitor.getItem().current_pumphours
+    const notes = monitor.getItem().notes
 
-    props.addCard(dragId, movement, maintenance, holehours, previous_hours, current_pumphours)
+    props.addCard(dragId, movement, maintenance, holehours, previous_hours, current_pumphours, notes)
   }
 }
 

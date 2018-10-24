@@ -114,6 +114,29 @@ class App extends Component {
           })
           return plungerError
 
+        case 'note':
+          const noteMessage = 'You must fill out all fields'
+          this.setState({
+            notification: true,
+            message: noteMessage
+          })
+          return noteMessage
+
+        case 'noteSuccess':
+          const noteSuccess = 'Note added succsefully'
+          this.setState({
+            notification: true,
+            message: noteSuccess
+          })
+          return noteSuccess
+
+        case 'noteFail':
+          const noteFail = 'Note failed to upload. Please try again.'
+          this.setState({
+            notification: true,
+            message: noteFail
+          })
+          return noteFail
       default:
       const message = 'There was a network error. Please try again later.'
         this.setState ({

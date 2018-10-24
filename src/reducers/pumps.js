@@ -1,4 +1,4 @@
-import {RECEIVE_PUMPS , TRANSITION_PUMP, TRANSFER_PUMP, REMOVE_PUMP, ADD_PUMP} from '../actions/equipment'
+import {RECEIVE_PUMPS , TRANSITION_PUMP, TRANSFER_PUMP, REMOVE_PUMP, ADD_PUMP, ADD_PUMP_NOTE, REMOVE_PUMP_NOTE} from '../actions/equipment'
 import { UPDATE_HOURS, UPDATE_PUMP_HOURS } from '../actions/pumps'
 
 export default function pumps (state=[], action){
@@ -15,16 +15,32 @@ export default function pumps (state=[], action){
 
         case TRANSFER_PUMP:
           let newPumps = [...state.filter(pump =>
-            pump.unitnumber != action.dragId),
+            pump.unitnumber !== action.dragId),
             action.newItem]
           return newPumps
 
         case REMOVE_PUMP:
-          let filteredPumps = [...state.filter(pump => pump.unitnumber != action.unitnumber)]
+          let filteredPumps = [...state.filter(pump => pump.unitnumber !== action.unitnumber)]
           return filteredPumps
 
         case ADD_PUMP:
           return [...state, action.unitnumber]
+
+        case ADD_PUMP_NOTE:
+          let pumpIndex = state.findIndex((unit) => unit.unitnumber === action.unitnumber)
+          const noteEdit = state.slice(0, pumpIndex).concat(
+            {...state[pumpIndex],
+            notes: [...state[pumpIndex].notes, action.note]
+          }, state.slice(pumpIndex + 1))
+          return noteEdit
+
+        case REMOVE_PUMP_NOTE:
+          let removeIndex = state.findIndex((unit) => unit.unitnumber === action.unitnumber)
+          let editedUnit = state.slice(0, removeIndex).concat(
+            {...state[removeIndex],
+            notes: state[removeIndex].notes.slice(0, action.index).concat(state[removeIndex].notes.slice(action.index + 1))
+          }, state.slice(removeIndex + 1))
+          return editedUnit
 
         case UPDATE_HOURS:
           let editIndex = state.findIndex((unit) => unit.unitnumber === action.unitnumber)

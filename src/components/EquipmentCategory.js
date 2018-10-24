@@ -18,11 +18,6 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import PumpHoursForm from './PumpHoursForm'
 import Grid from '@material-ui/core/Grid';
 
-
-
-
-const update = require('immutability-helper');
-
 const styles = theme => ({
   root: {
     display: 'flex',
@@ -91,9 +86,8 @@ class EquipmentCategory extends Component {
     })
   }
 
-  addCard = (dragId, movement, maintenance, holehours, previous_hours, current_pumphours) => {
+  addCard = (dragId, movement, maintenance, holehours, previous_hours, current_pumphours, notes) => {
     const { dispatch } = this.props
-    const dragIndex = this.props.equipment.findIndex(x => x.text === dragId)
     const newItem =      this.state.standbyToggle ?  {
             unitnumber: dragId,
             standby: false,
@@ -105,7 +99,8 @@ class EquipmentCategory extends Component {
             hole_4_life: holehours[3],
             hole_5_life: holehours[4],
             previous_hours: previous_hours,
-            pump_hours: current_pumphours
+            pump_hours: current_pumphours,
+            notes: notes
           } : {
                   unitnumber: dragId,
                   standby: true,
@@ -117,18 +112,19 @@ class EquipmentCategory extends Component {
                   hole_4_life: holehours[3],
                   hole_5_life: holehours[4],
                   previous_hours: previous_hours,
-                  pump_hours: current_pumphours
+                  pump_hours: current_pumphours,
+                  notes: notes
                 }
     dispatch(transferEquipment(dragId, newItem, this.props.type))
   }
 
-  moveCard = (dragId, hoverIndex, dragstandby, maintenance, movement, holehours, previous_hours, current_pumphours) => {
+  moveCard = (dragId, hoverIndex, dragstandby, maintenance, movement, holehours, previous_hours, current_pumphours, notes) => {
     const { dispatch } = this.props
     const dragIndex = this.props.equipment.findIndex(x => x.unitnumber === dragId)
     console.log(this.props.equipment[hoverIndex])
 
     const dragCard =
-                     this.props.equipment[dragIndex].standby == false && this.props.equipment[hoverIndex].standby == true ?
+                     this.props.equipment[dragIndex].standby === false && this.props.equipment[hoverIndex].standby === true ?
                      {
                        unitnumber: dragId,
                        standby: true,
@@ -141,7 +137,8 @@ class EquipmentCategory extends Component {
                        hole_4_life: holehours[3],
                        hole_5_life: holehours[4],
                        previous_hours: previous_hours,
-                       pump_hours: current_pumphours
+                       pump_hours: current_pumphours,
+                       notes: notes
                      }
                      :
                     {
@@ -155,7 +152,8 @@ class EquipmentCategory extends Component {
                       hole_4_life: holehours[3],
                       hole_5_life: holehours[4],
                       previous_hours: previous_hours,
-                      pump_hours: current_pumphours
+                      pump_hours: current_pumphours,
+                      notes: notes
                     }
     const hoverCard = {
                       pump_hours: this.props.equipment[hoverIndex].pump_hours,
@@ -168,7 +166,8 @@ class EquipmentCategory extends Component {
                       hole_3_life: this.props.equipment[hoverIndex].hole_3_life,
                       hole_4_life: this.props.equipment[hoverIndex].hole_4_life,
                       hole_5_life: this.props.equipment[hoverIndex].hole_5_life,
-                      previous_hours: this.props.equipment[hoverIndex].previous_hours
+                      previous_hours: this.props.equipment[hoverIndex].previous_hours,
+                      notes: this.props.equipment[hoverIndex].notes,
                         }
 
     dispatch(transitionEquipment(dragCard, hoverCard, hoverIndex, this.props.type))
@@ -214,6 +213,7 @@ updateLoading: false
                 droptoggle={this.dropToggle}
                 type={this.props.type}
                 handleError={this.props.handleError}
+                notes={card.notes}
                 toggleNotification={this.props.toggleNotification}
                 maintenance={card.maintenance}
                 movement={card.movement}
@@ -257,6 +257,7 @@ updateLoading: false
                   toggleNotification={this.props.toggleNotification}
                   maintenance={card.maintenance}
                   movement={card.movement}
+                  notes={card.notes}
                   holehours={[card.previous_hours.hole_1,
                             card.previous_hours.hole_2,
                             card.previous_hours.hole_3,
@@ -321,6 +322,7 @@ updateLoading: false
                         tostandby={this.state.standbyToggle}
                         inlineindex={index + 1}
                         droptoggle={this.dropToggle}
+                        notes={card.notes}
                         type={this.props.type}
                         handleError={this.props.handleError}
                         toggleNotification={this.props.toggleNotification}

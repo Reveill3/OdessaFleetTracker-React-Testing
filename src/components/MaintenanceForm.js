@@ -138,7 +138,6 @@ class MaintenanceForm extends React.Component {
             })
           )
         }).catch((error) => {
-              console.log(error)
               this.setState({
               errorSubmit: true
             })})

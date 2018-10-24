@@ -1,7 +1,6 @@
-import React, { Fragment } from "react";
+import React from "react";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
-import PropTypes from "prop-types";
 import Checkbox from "@material-ui/core/Checkbox";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -126,20 +125,20 @@ class MainForm extends React.Component {
     ['Clamp Plunger5']: false,
     ['4" Flappers']: "",
     ['6" Vic Seal']: "",
-    ['Clamp Adapter']: "",
-    ['Clamp Adapter Pin']: "",
-    ['Discharge Cover W/Gauge']: "",
+    ['Clamp']: "",
+    ['Pin Clamp Style']: "",
+    ['Christmas Tree']: "",
     ['Discharge Flange Bolt']: "",
     ['Discharge Flange Nut']: "",
     ['Discharge O-ring']: "",
-    ['Discharge Valve Cover']: "",
+    ['Pressure Cap']: "",
     ['Flange O-ring']: "",
-    ['Fluid End - Stainless']: "",
-    ['Fluid End = Alloy']: "",
+    ['Needle Valve']: "",
+    ['Grease Plunger']: "",
     ['Gland Nut']: "",
     ['Manifold O-ring']: "",
     ['Pony Rod Adapter Bolts']: "",
-    ['SPM Check Valve Kit']: "",
+    ['Grease Check Valve']: "",
     ['Spacer/Adapter']: "",
     ['Spring Keeper']: "",
     ['Spring Keeper Pin']: "",
@@ -147,7 +146,7 @@ class MainForm extends React.Component {
     ['Stay Rod Nut']: "",
     ['Suction Manifold Bolt']: "",
     ['Suction Valve Guide']: "",
-    ['TSI Check Valve Kit']: "",
+    ['Gauge Retainer Nut']: "",
     ['FMC Check Valve Kit']: "",
   };
 
@@ -214,20 +213,20 @@ class MainForm extends React.Component {
     ['Clamp Plunger5']: false,
     ['4" Flappers']: "",
     ['6" Vic Seal']: "",
-    ['Clamp Adapter']: "",
-    ['Clamp Adapter Pin']: "",
-    ['Discharge Cover W/Gauge']: "",
+    ['Clamp']: "",
+    ['Pin Clamp Style']: "",
+    ['Christmas Tree']: "",
     ['Discharge Flange Bolt']: "",
     ['Discharge Flange Nut']: "",
     ['Discharge O-ring']: "",
-    ['Discharge Valve Cover']: "",
+    ['Pressure Cap']: "",
     ['Flange O-ring']: "",
-    ['Fluid End - Stainless']: "",
-    ['Fluid End = Alloy']: "",
+    ['Needle Valve']: "",
+    ['Grease Plunger']: "",
     ['Gland Nut']: "",
     ['Manifold O-ring']: "",
     ['Pony Rod Adapter Bolts']: "",
-    ['SPM Check Valve Kit']: "",
+    ['Grease Check Valve']: "",
     ['Spacer/Adapter']: "",
     ['Spring Keeper']: "",
     ['Spring Keeper Pin']: "",
@@ -235,7 +234,7 @@ class MainForm extends React.Component {
     ['Stay Rod Nut']: "",
     ['Suction Manifold Bolt']: "",
     ['Suction Valve Guide']: "",
-    ['TSI Check Valve Kit']: "",
+    ['Gauge Retainer Nut']: "",
     ['FMC Check Valve Kit']: "",
   }
 
@@ -475,9 +474,9 @@ class MainForm extends React.Component {
                 ) : null}
               </Grid>
               {iterable.map(
-                thing =>
+                (thing, index) =>
                   labels === null ? (
-                    <Grid item xs={12}>
+                    <Grid  key={index} item xs={12}>
                       <Checkbox
                         checked={this.state[thing + hole.slice(-1)]}
                         onChange={this.handleCheckChange(thing, hole.slice(-1))}
@@ -488,6 +487,7 @@ class MainForm extends React.Component {
                     </Grid>
                   ) : (type === "packing") | (type === "vs") ? (
                     <Grid
+                      key={index}
                       item
                       xs={12}
                       className={
@@ -532,7 +532,6 @@ class MainForm extends React.Component {
   };
 
   render() {
-    console.log(this.state)
     const holes = ["Hole 1", "Hole 2", "Hole 3", "Hole 4", "Hole 5"];
     const keys = Object.keys(this.state)
     let errorFilter = keys.filter(key => key.includes('pump') | key.includes('grease') && this.state[key] === '' | isNaN(this.state[key]) | this.state['pump_hours'] === 0 | this.state['treater'] === '')
@@ -563,13 +562,13 @@ class MainForm extends React.Component {
     ];
     const otherParts = [
       "Suction Valve Guide",
-      "Discharge Valve Cover",
-      "Discharge Cover W/Gauge",
+      "Pressure Cap",
+      "Christmas Tree",
       "Discharge O-ring",
       "Gland Nut",
       "Spacer/Adapter",
-      "Clamp Adapter",
-      "Clamp Adapter Pin",
+      "Clamp",
+      "Pin Clamp Style",
       "Pony Rod Adapter Bolts",
       "Spring Keeper",
       "Spring Keeper Pin",
@@ -582,13 +581,13 @@ class MainForm extends React.Component {
       '4" Flappers'
     ];
     const otherPartsTwo = [
-      "Fluid End - Stainless",
-      "Fluid End = Alloy",
+      "Needle Valve",
+      "Grease Plunger",
       "Stay Rod",
       "Stay Rod Nut",
-      "SPM Check Valve Kit",
+      "Grease Check Valve",
       "FMC Check Valve Kit",
-      "TSI Check Valve Kit"
+      "Gauge Retainer Nut"
     ];
 
     const checkboxPackingHolesAll = Object.keys(this.state).filter(key =>
@@ -637,8 +636,8 @@ class MainForm extends React.Component {
               <Grid item className={this.props.classes.column} xs={2}>
                 {this.generateSection(vsLabels, "Parts", vsLabels, "packing")}
               </Grid>
-              {holes.map(hole => (
-                <Grid item xs={2}>
+              {holes.map((hole, index) => (
+                <Grid key={index} item xs={2}>
                   {this.generateSection(vsLabels, hole)}
                 </Grid>
               ))}
@@ -655,14 +654,14 @@ class MainForm extends React.Component {
                   "packing"
                 )}
               </Grid>
-              {holes.map(hole => (
-                <Grid item xs={2}>
+              {holes.map((hole, index) => (
+                <Grid key={index} item xs={2}>
                   {this.generateSection(packingLabels, hole)}
                 </Grid>
               ))}
-              <Grid xs={6}>
+              <Grid item xs={6}>
                 <Grid container spacing={24}>
-                  <Grid xs={6}>
+                  <Grid item xs={6}>
                     {this.generateSection(
                       otherParts,
                       "Parts",
@@ -671,7 +670,7 @@ class MainForm extends React.Component {
                       "packing"
                     )}
                   </Grid>
-                  <Grid xs={6}>
+                  <Grid item xs={6}>
                     {this.generateSection(
                       otherParts,
                       "Parts",
@@ -682,9 +681,9 @@ class MainForm extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid xs={6}>
+              <Grid item xs={6}>
                 <Grid container spacing={24}>
-                  <Grid xs={6}>
+                  <Grid item xs={6}>
                     {this.generateSection(
                       otherPartsTwo,
                       "Parts",
@@ -693,7 +692,7 @@ class MainForm extends React.Component {
                       "packing"
                     )}
                   </Grid>
-                  <Grid xs={6}>
+                  <Grid item xs={6}>
                     {this.generateSection(
                       otherPartsTwo,
                       "Parts",
@@ -765,8 +764,8 @@ class MainForm extends React.Component {
                   />
                 </FormControl>
               </Grid>
-              {packingHoles.map(hole => (
-                <Grid item xs={12}>
+              {packingHoles.map((hole, index) => (
+                <Grid key={index} item xs={12}>
                   <FormControl className={classes.formControl}>
                     <TextField
                       margin="dense"
