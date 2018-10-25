@@ -15,11 +15,11 @@ const Equipment = props => {
             <h3>Driver:</h3>
             <ListGroupItemText>{equipment.driver}</ListGroupItemText>
           </div>
-          <Button color={(equipment.yours && equipment.isCancelled) ? 'warning':
-            (equipment.isCancelled) ? 'success' : 'danger'}
+          <Button color={(equipment.yours && equipment.isCancelled) ? 'danger':
+            (equipment.isCancelled) ? 'success' : 'warning'}
                   className='col' onClick={() => props.cancelClick( index )}>
             {(equipment.yours && equipment.isCancelled) ?  'Press Submit to Cancel' :
-              (equipment.isCancelled) ? 'Press Submit to Receive Equipment' :'Cancel'}
+              (equipment.isCancelled) ? 'Press Submit to Receive Equipment' :'Click Here To Select for Receipt/Cancellation'}
           </Button>
         </ListGroupItem>
       </div>

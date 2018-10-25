@@ -118,7 +118,8 @@ class MoveEquipmentWindow extends React.Component {
 
 
   handleSend = () => {
-    if (this.state.treater === '' | this.state.transferTo === '' | this.state.reason === '') {
+    if (this.state.treater === '' | this.state.transferTo === '' | this.state.reason === '' | this.state.driver === '') {
+    this.props.toggleNotification('note')
     this.setState({
       error: true,
       treater: '',

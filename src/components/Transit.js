@@ -17,6 +17,10 @@ class Transit extends Component {
     };
   }
 
+  componentDidMount(){
+    this.populate_transit()
+  }
+
   handleCancelClick = (index) => {
     this.setState((prevState) =>
       prevState.pumps[index].isCancelled = !prevState.pumps[index].isCancelled
