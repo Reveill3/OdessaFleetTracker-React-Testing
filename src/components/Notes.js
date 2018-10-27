@@ -107,7 +107,7 @@ class Notes extends Component {
   }
 
   handleDelete = (index, recId, treater, details, title, noteNum) => {
-    console.log(noteNum)
+    if (title !== 'This is a note'){
     this.props.dispatch(removeNote(index, this.props.unitnumber, this.props.type))
     fetch('https://odessafleettracker.herokuapp.com/api/v1/delete_note/',{ // TODO: replace url
       method:'POST',
@@ -134,7 +134,7 @@ class Notes extends Component {
         },
          this.props.type)
           )}
-        )
+        )} else {this.props.toggleNotification('test')}
 
   }
 

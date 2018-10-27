@@ -137,6 +137,14 @@ class App extends Component {
             message: noteFail
           })
           return noteFail
+        case 'test':
+          const noteTest = 'The test note has to stay for now. All other notes can be deleted.'
+          this.setState({
+            notification: true,
+            message: noteTest
+          })
+          return noteFail
+
       default:
       const message = 'There was a network error. Please try again later.'
         this.setState ({
