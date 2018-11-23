@@ -11,20 +11,9 @@ import $ from 'jquery'
 import HomePage from './components/HomePage'
 
 const store = createStore(reducer, composeWithDevTools(middleware))
-let crew = $("#my-data").data('name')
-let homePage = document.getElementById('home-page')
-let app = document.getElementById('root')
-console.log(crew)
-
-if (app){
+let crew=''
 ReactDOM.render(
   <Provider store={store}>
-    <App authedUser={crew}/>
+    <App/>
   </Provider>
-  , document.getElementById('root'));}
-
-if (homePage) {
-  ReactDOM.render(
-      <HomePage />
-    , document.getElementById('home-page'));
-}
+  , document.getElementById('root'))

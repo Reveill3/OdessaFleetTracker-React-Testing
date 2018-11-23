@@ -47,6 +47,10 @@ export function getRecordId (crew) {
         return 'recthKqHDjMGUla4A'
       case 'red':
         return 'recpKW7GFncVrHprG'
+    case 'motley':
+        return 'recsBpTq1pVK2jl3p'
+    case 'golf':
+        return 'recHuwWtR3sHQ9cTv'
       case 'yard':
         return 'recKV3XMYokFrKrGZ'
       default:
