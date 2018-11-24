@@ -69,18 +69,33 @@ class App extends React.Component {
       })
   }
 
+  logout = () =>{
+      fetch('https://odessafleettracker.herokuapp.com/logout', {
+          method:'POST',
+          mode: 'cors',
+          body: JSON.stringify([{}]),
+          headers:{
+            'Content-Type': 'application/json'
+          }
+      }).then(
+          this.setState({
+              loggedIn: false
+          })
+      )
+  }
+
   render(){
     const { classes } = this.props
 
     return(
       <div>
         <MuiThemeProvider theme={theme}>
-         <NavBar login={this.login} authenticated={this.state.loggedIn}/>
+         <NavBar login={this.login} authenticated={this.state.loggedIn} logout={this.logout}/>
           <div className={classes.mainView}>
             <Router>
               <Switch>
                 <Route path='/' exact render={() => ( this.state.loggedIn ? (<Redirect to='/equipment'/>): (<HomePage/>))}/>
-                <Route path='/equipment' render={() => (this.state.loggedIn ? (<EquipmentList authedUser={this.state.crew}/>):(<HomePage/>))}/>
+                <Route path='/equipment' render={() => (this.state.loggedIn ? (<EquipmentList authedUser={this.state.crew}/>):(<Redirect to='/'/>))}/>
               </Switch>
             </Router>
             </div>

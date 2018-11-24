@@ -17,10 +17,13 @@ import {connect} from 'react-redux'
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
+import Search from './Search'
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end'
   },
   grow: {
     flexGrow: 1,
@@ -30,8 +33,7 @@ const styles = theme => ({
     marginRight: 20,
   },
   text: {
-      alignItems: 'flex-end',
-      maxHeight: 36
+      maxHeight: 60,
   },
   close: {
   padding: theme.spacing.unit / 2,
@@ -41,7 +43,8 @@ const styles = theme => ({
 class NavBar extends Component {
 
     state = {
-        open: false
+        open: false,
+        loggingOut: false
     }
 
     handleChange = name => event => {
@@ -60,7 +63,7 @@ class NavBar extends Component {
                 open: true
             })
         } else {
-            fetch('http://192.168.86.26:8000/login',{ // TODO: replace url
+            fetch('https://odessafleettracker.herokuapp.com/login',{ // TODO: replace url
               method:'POST',
               mode: 'cors',
               body: JSON.stringify([{'username': this.state.username, 'password': this.state.password}]),
@@ -70,6 +73,10 @@ class NavBar extends Component {
           }).then(resp => resp.json()).then((data) => {
               if (data.authenticated){
               this.props.login(data.crew)
+              this.setState({
+                  username: "",
+                  password: ""
+              })
           } else {
               this.setState({
                   open: true,
@@ -81,8 +88,6 @@ class NavBar extends Component {
     }
 }
 
-
-
   render(){
   const { classes } = this.props
   console.log(this.state)
@@ -90,15 +95,12 @@ class NavBar extends Component {
     <div>
       <AppBar position="static">
         <Toolbar>
-            <Grid container spacing={24}>
+            <Grid container spacing={24} className={classes.root}>
                 <Grid item xs={7}>
-                     {this.props.authedUser !== '' ?  <Typography variant="h6" color="inherit" className={classes.grow}>
+                     {this.props.authenticated ?  <Typography variant="h6" color="inherit" className={classes.grow}>
                         Equipment List
                       </Typography> : null}
                   </Grid>
-                  <Grid item xs={2} className={classes.text}>
-                    <EquipmentListDrawer />
-                </Grid>
             {!this.props.authenticated ?  (<Fragment>
                   <Grid item xs={1}>
                   <FormControl>
@@ -155,11 +157,16 @@ class NavBar extends Component {
                   />
               </Grid>
                 </Grid>
-            </Fragment>) : null}
+            </Fragment>) : (
+                <Fragment>
+                <Search/>
+                <EquipmentListDrawer/>
+                <Button color="inherit" onClick={() => this.props.logout()}>Logout</Button>
+                </Fragment>)
+            }
               </Grid>
         </Toolbar>
       </AppBar>
-
     </div>
   );}
 }

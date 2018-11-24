@@ -101,7 +101,7 @@ class EquipmentListDrawer extends React.Component {
     return (
     <div>
         <EquipmentListDialog handleClose={this.handleDialogClose} view={this.state.view} open={this.state.dialog}/>
-        <Button color='inherit' onClick={this.toggleDrawer('right', true)}>Print/View Equipment Lists</Button>
+        <Button variant={this.props.view ==='home' ? 'contained':null} color='inherit' onClick={this.toggleDrawer('right', true)}>Print/View Equipment Lists</Button>
         <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false)}>
           <div
             tabIndex={0}
