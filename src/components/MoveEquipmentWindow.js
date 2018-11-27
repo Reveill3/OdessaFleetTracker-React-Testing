@@ -187,10 +187,10 @@ class MoveEquipmentWindow extends React.Component {
                         input={<Input id="treater" />}
                       >
                         <option value="" />
-                        { treaters.treaters.map(treater =>
+                        { treaters.treaters !== undefined ? ( treaters.treaters.map(treater =>
                         <option key={treater.name} value={treater.name}>{treater.name}</option>
-                          )
-                        }
+                          ))
+                       : null}
 
 
                       </Select>
