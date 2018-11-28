@@ -181,10 +181,10 @@ class Notes extends Component {
                       input={<Input id="treater" />}
                     >
                       <option value="" />
-                      { this.props.treaters.treaters.map(treater =>
+                      {this.props.treaters.treaters !== undefined ? ( this.props.treaters.treaters.map(treater =>
                       <option key={treater.name} value={treater.name}>{treater.name}</option>
-                        )
-                      }
+                        ))
+                     : null}
                     </Select>
                   </FormControl>
                 </Grid>
