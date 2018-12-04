@@ -92,7 +92,7 @@ class MoveEquipmentWindow extends React.Component {
     driver: '',
   };
 
-  crews = ['Onyx', 'Blue', 'Red', 'Green', 'Gold', 'Yard']
+  crews = ['Onyx', 'Blue', 'Red', 'Green', 'Gold', 'Yard', 'Golf', 'Motley']
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
