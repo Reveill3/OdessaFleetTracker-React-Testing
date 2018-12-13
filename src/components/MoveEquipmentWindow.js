@@ -73,6 +73,10 @@ export function getCrewColor (recid) {
         return 'onyx'
       case 'recpKW7GFncVrHprG':
         return 'red'
+        case 'recsBpTq1pVK2jl3p':
+          return 'motley'
+          case 'recHuwWtR3sHQ9cTv':
+            return 'golf'
       case 'recKV3XMYokFrKrGZ':
         return 'yard'
       default:
