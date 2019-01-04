@@ -288,7 +288,8 @@ class MainForm extends React.Component {
     justVS.forEach(hole => newPrevHours['hole_' + hole] = this.state.pump_hours)
 
     if (!error)
-{    fetch('https://odessafleettracker.herokuapp.com/api/v1/log_maintenance/',{ // TODO: replace url
+    {
+      fetch('https://odessafleettracker.herokuapp.com/api/v1/log_maintenance/',{ // TODO: replace url
       method:'POST',
       mode: 'cors',
       body: JSON.stringify({

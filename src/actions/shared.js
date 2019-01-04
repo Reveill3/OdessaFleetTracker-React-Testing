@@ -12,7 +12,6 @@ export default function handleInitialData (crew) {
     }).then(
       response => response.json()
     ).then(data => {
-
       dispatch(receiveTreaters(data))
     }
   ).then(
