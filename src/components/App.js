@@ -7,6 +7,12 @@ import { createMuiTheme } from '@material-ui/core/styles'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { withStyles } from '@material-ui/core/styles';
 import HomePage from './HomePage'
+import ApolloClient from "apollo-boost"
+import { ApolloProvider } from 'react-apollo'
+
+const client = new ApolloClient({
+  uri: "http://localhost:5000/graphql"
+});
 
 const theme = createMuiTheme(
   {
@@ -87,21 +93,21 @@ class App extends React.Component {
   render(){
     const { classes } = this.props
 
-    return(
-      <div>
-        <MuiThemeProvider theme={theme}>
-         <NavBar login={this.login} authenticated={this.state.loggedIn} logout={this.logout}/>
-          <div className={classes.mainView}>
-            <Router>
-              <Switch>
-                <Route path='/' exact render={() => ( this.state.loggedIn ? (<Redirect to='/equipment'/>): (<HomePage/>))}/>
-                <Route path='/equipment' render={() => (this.state.loggedIn ? (<EquipmentList authedUser={this.state.crew}/>):(<Redirect to='/'/>))}/>
-              </Switch>
-            </Router>
-            </div>
-        </MuiThemeProvider>
-      </div>
-    )
+    return <ApolloProvider client={client}>
+              <div>
+                <MuiThemeProvider theme={theme}>
+                  <NavBar login={this.login} authenticated={this.state.loggedIn} logout={this.logout} />
+                  <div className={classes.mainView}>
+                    <Router>
+                      <Switch>
+                        <Route path="/" exact render={() => (this.state.loggedIn ? <Redirect to="/equipment" /> : <HomePage />)} />
+                        <Route path="/equipment" render={() => (this.state.loggedIn ? <EquipmentList authedUser={this.state.crew} /> : <Redirect to="/" />)} />
+                      </Switch>
+                    </Router>
+                  </div>
+                </MuiThemeProvider>
+              </div>
+            </ApolloProvider>;
   }
 }
 

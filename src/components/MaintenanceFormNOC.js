@@ -18,6 +18,8 @@ import flow from 'lodash/flow';
 import { connect } from 'react-redux';
 import Input from '@material-ui/core/Input';
 import { updateHours } from '../actions/pumps'
+import gql from "graphql-tag";
+import { Mutation } from "react-apollo"
 
 
 const styles = theme => ({
@@ -60,6 +62,47 @@ partsContainer: {
   marginTop:10
 }
 });
+
+const ADD_MAINTENANCE = gql`
+mutation AddMaintenance (
+  $hole: String
+  ){
+	addMaintenance(maint_object: {
+    maint_type: "VS",
+    crew: "red",
+    treater: 14022,
+    unit_number: "53Q12222",
+    hole: $hole,
+    pump_hours: 500,
+    parts_used: {
+      suction_valves: 2,
+      suction_seats: 3
+    }
+  }) {
+	  maint_type
+	  treater
+	  unit_number
+	  hole
+	  pump_hours
+	  hole_1_life_maint
+	  hole_2_life_maint
+	  hole_3_life_maint
+	  hole_4_life_maint
+	  hole_5_life
+	  grease_pressure_1
+	  grease_pressure_2
+	  grease_pressure_3
+	  grease_pressure_4
+	  grease_pressure_5
+    parts_used{
+      suction_seats
+      suction_spring
+      discharge_seats
+      discharge_spring
+    }
+	}
+}
+`
 
 class MainForm extends React.Component {
   state = {
@@ -238,6 +281,140 @@ class MainForm extends React.Component {
     ['FMC Check Valve Kit']: "",
   }
 
+  generateQLObject = (load_data, toUpdate, hole) => {
+    const holeParts = {
+      // 'suction_valve_1': load_data['Suction Valve1'],
+      // 'suction_valve_2': load_data['Suction Valve2'],
+      // 'suction_valve_3': load_data['Suction Valve3'],
+      // 'suction_valve_4': load_data['Suction Valve4'],
+      // 'suction_valve_5': load_data['Suction Valve5'],
+      // 'suction_seat_1': load_data['Suction Seat1'],
+      // 'suction_seat_2': load_data['Suction Seat2'],
+      // 'suction_seat_3': load_data['Suction Seat3'],
+      // 'suction_seat_4': load_data['Suction Seat4'],
+      // 'suction_seat_5': load_data['Suction Seat5'],
+      // 'discharge_valve_1': load_data['Discharge Valve1'],
+      // 'discharge_valve_2': load_data['Discharge Valve2'],
+      // 'discharge_valve_3': load_data['Discharge Valve3'],
+      // 'discharge_valve_4': load_data['Discharge Valve4'],
+      // 'discharge_valve_5': load_data['Discharge Valve5'],
+      // 'discharge_seat_1': load_data['Discharge Seat1'],
+      // 'discharge_seat_2': load_data['Discharge Seat2'],
+      // 'discharge_seat_3': load_data['Discharge Seat3'],
+      // 'discharge_seat_4': load_data['Discharge Seat4'],
+      // 'discharge_seat_5': load_data['Discharge Seart5'],
+      // 'suction_spring_1': load_data['Suction Spring1'],
+      // 'suction_spring_2': load_data['Suction Spring2'],
+      // 'suction_spring_3': load_data['Suction Spring3'],
+      // 'suction_spring_4': load_data['Suction Spring4'],
+      // 'suction_spring_5': load_data['Suction Spring5'],
+      // 'discharge_spring_1': load_data['Discharge Valve Spring1'],
+      // 'discharge_spring_2': load_data['Discharge Valve Spring2'],
+      // 'discharge_spring_3': load_data['Discharge Valve Spring3'],
+      // 'discharge_spring_4': load_data['Discharge Valve Spring4'],
+      // 'discharge_spring_5': load_data['Discharge Valve Spring5'],
+      // 'packing_brass_1': load_data["Packing(w / Brass Ring)1"],
+      // 'packing_brass_2': load_data["Packing(w / Brass Ring)2"],
+      // 'packing_brass_3': load_data["Packing(w / Brass Ring)3"],
+      // 'packing_brass_4': load_data["Packing(w / Brass Ring)4"],
+      // 'packing_brass_5': load_data["Packing(w / Brass Ring)5"],
+      // 'packing_nobrass_1': load_data["Packing(w / o Brass Ring)1"],
+      // 'packing_nobrass_2': load_data["Packing(w / o Brass Ring)2"],
+      // 'packing_nobrass_3': load_data["Packing(w / o Brass Ring)3"],
+      // 'packing_nobrass_4': load_data["Packing(w / o Brass Ring)4"],
+      // 'packing_nobrass_5': load_data["Packing(w / o Brass Ring)5"],
+      // 'plunger_1': load_data['Plunger1'],
+      // 'plunger_2': load_data['Plunger2'],
+      // 'plunger_3': load_data['Plunger3'],
+      // 'plunger_4': load_data['Plunger4'],
+      // 'plunger_5': load_data['Plunger5'],
+      // 'clamp_plunger_1': load_data['Clamp Plunger1'],
+      // 'clamp_plunger_2': load_data['Clamp Plunger2'],
+      // 'clamp_plunger_3': load_data['Clamp Plunger3'],
+      // 'clamp_plunger_4': load_data['Clamp Plunger4'],
+      // 'clamp_plunger_5': load_data['Clamp Plunger5'],
+    }
+
+    if (toUpdate.length > 0){
+      if (toUpdate.indexOf(hole) === "0") {
+      return { 
+      'suction_valves': load_data['Suction Valve' + hole],
+      'suction_seats': load_data['Suction Seat' + hole],
+      'discharge_valves': load_data['Discharge Valve' + hole],
+      'discharge_seats': load_data['Discharge Seat' + hole],
+      'suction_spring': load_data['Suction Spring' + hole],
+      'discharge_spring': load_data['Discharge Valve Spring' + hole],
+      'packing_brass': load_data["Packing(w / Brass Ring)" + hole],
+      'packing_nobrass': load_data["Packing(w / o Brass Ring)" + hole],
+      'plunger': load_data['Plunger' + hole],
+      'clamp_plunger': load_data['Clamp Plunger' + hole],
+      'four_inch_flappers': load_data['4" Flappers'],
+      'six_inch_vic': load_data['6" Vic Seal'],
+      'clamp': load_data['Clamp'],
+      'christmas_tree': load_data['Christmas Tree'],
+      'discharge_flange_bolt': load_data['Discharge Flange Bolt'],
+      'discharge_flange_nut': load_data['Discharge Flange Nut'],
+      'discharge_o_ring': load_data['Discharge O-ring'],
+      'pressure_cap': load_data['Pressure Cap'],
+      'fmc_check_valve_kit': load_data['FMC Check Valve Kit'],
+      'flange_o_ring': load_data['Flange O-ring'],
+      'needle_valve': load_data['Needle Valve'],
+      'grease_plunger': load_data['Grease Plunger'],
+      'gland_nut': load_data['Gland Nut'],
+      'manifold_o_ring': load_data['Manifold O-ring'],
+      'pony_rod_adapter_bolts': load_data['Pony Rod Adapter Bolts'],
+      'grease_check_valve': load_data['Grease Check Valve'],
+      'spacer_adapter': load_data['Spacer/Adapter'],
+      'spring_keeper': load_data['Spring Keeper'],
+      'spring_keeper_pin': load_data['Spring Keeper Pin'],
+      'pin_clamp_style': load_data['Pin Clamp Style'],
+      'stay_rod': load_data['Stay Rod'], 'stay_rod_nut': load_data['Stay Rod Nut'],
+      'suction_manifold_bolt': load_data['Suction Manifold Bolt'],
+      'suction_valve_guide': load_data['Suction Valve Guide'],
+      'gauge_retainer_nut': load_data['Gauge Retainer Nut'],
+    }}
+    else {
+      return {
+        'suction_valves': load_data['Suction Valve' + hole],
+        'suction_seats': load_data['Suction Seat' + hole],
+        'discharge_valves': load_data['Discharge Valve' + hole],
+        'discharge_seats': load_data['Discharge Seat' + hole],
+        'suction_spring': load_data['Suction Spring' + hole],
+        'discharge_spring': load_data['Discharge Valve Spring' + hole],
+        'packing_brass': load_data["Packing(w / Brass Ring)" + hole],
+        'packing_nobrass': load_data["Packing(w / o Brass Ring)" + hole],
+      }
+    }}
+    else {
+      return {
+        'four_inch_flappers': load_data['4" Flappers'],
+        'six_inch_vic': load_data['6" Vic Seal'],
+        'clamp': load_data['Clamp'],
+        'christmas_tree': load_data['Christmas Tree'],
+        'discharge_flange_bolt': load_data['Discharge Flange Bolt'],
+        'discharge_flange_nut': load_data['Discharge Flange Nut'],
+        'discharge_o_ring': load_data['Discharge O-ring'],
+        'pressure_cap': load_data['Pressure Cap'],
+        'fmc_check_valve_kit': load_data['FMC Check Valve Kit'],
+        'flange_o_ring': load_data['Flange O-ring'],
+        'needle_valve': load_data['Needle Valve'],
+        'grease_plunger': load_data['Grease Plunger'],
+        'gland_nut': load_data['Gland Nut'],
+        'manifold_o_ring': load_data['Manifold O-ring'],
+        'pony_rod_adapter_bolts': load_data['Pony Rod Adapter Bolts'],
+        'grease_check_valve': load_data['Grease Check Valve'],
+        'spacer_adapter': load_data['Spacer/Adapter'],
+        'spring_keeper': load_data['Spring Keeper'],
+        'spring_keeper_pin': load_data['Spring Keeper Pin'],
+        'pin_clamp_style': load_data['Pin Clamp Style'],
+        'stay_rod': load_data['Stay Rod'], 'stay_rod_nut': load_data['Stay Rod Nut'],
+        'suction_manifold_bolt': load_data['Suction Manifold Bolt'],
+        'suction_valve_guide': load_data['Suction Valve Guide'],
+        'gauge_retainer_nut': load_data['Gauge Retainer Nut'],
+      }
+    }
+  }
+
   handleClickOpen = () => {
   this.setState({ open: true });
   };
@@ -257,10 +434,11 @@ class MainForm extends React.Component {
     this.setState({ [name]: event.target.value });
   };
 
-  handleSubmit = (error, errorType) => {
+  handleSubmit = (error, errorType, addMaintenance) => {
     const keys = Object.keys(this.state)
     const vsHoles = keys.filter(key => key.includes('Valve') | key.includes('Seat') | key.includes('Packing') && this.state[key] !== false && !isNaN(key.slice(-1)) ).map(item => item.slice(-1))
     const toUpdate = [...new Set(vsHoles)]
+    console.log(toUpdate)
     const justVS = keys.filter(key => key.includes('Valve') | key.includes('Seat') && this.state[key] !== false && !isNaN(key.slice(-1))).map(item => item.slice(-1))
     let lifeObjectLog = {
             hole_1_life: 0,
@@ -302,6 +480,49 @@ class MainForm extends React.Component {
       }
         }
       ).then((response) => {
+        console.log(toUpdate)
+        addMaintenance({
+          variables: {
+            crew: this.state.crew,
+            treater: this.state.treater,
+            unit_number: this.state.unitnumber,
+            hole: "0",
+            pump_hours: this.state.pump_hours,
+            parts_used: this.generateQLObject(this.state, toUpdate, "0"),
+            hole_1_life: this.state.hole_1_life,
+            hole_2_life: this.state.hole_2_life,
+            hole_3_life: this.state.hole_3_life,
+            hole_4_life: this.state.hole_4_life,
+            hole_5_life: this.state.hole_5_life,
+            grease_pressure_1: this.state.grease_pressure1,
+            grease_pressure_2: this.state.grease_pressure2,
+            grease_pressure_3: this.state.grease_pressure3,
+            grease_pressure_4: this.state.grease_pressure4,
+            grease_pressure_5: this.state.grease_pressure5
+          }
+        })
+        toUpdate.forEach(hole => {
+          addMaintenance({
+            variables: {
+              crew: this.state.crew,
+              treater: this.state.treater,
+              unit_number: this.state.unitnumber,
+              hole: hole,
+              pump_hours: this.state.pump_hours,
+              parts_used: this.generateQLObject(this.state, toUpdate, hole),
+              hole_1_life: this.state.hole_1_life,
+              hole_2_life: this.state.hole_2_life,
+              hole_3_life: this.state.hole_3_life,
+              hole_4_life: this.state.hole_4_life,
+              hole_5_life: this.state.hole_5_life,
+              grease_pressure_1: this.state.grease_pressure1,
+              grease_pressure_2: this.state.grease_pressure2,
+              grease_pressure_3: this.state.grease_pressure3,
+              grease_pressure_4: this.state.grease_pressure4,
+              grease_pressure_5: this.state.grease_pressure5
+            }
+          });
+        })
           fetch('https://odessafleettracker.herokuapp.com/api/v1/update_pump_hours/',{ // TODO: replace url
             method:'POST',
             mode: 'cors',
@@ -606,215 +827,156 @@ class MainForm extends React.Component {
 
 
     return (
-      <div className={classes.root}>
-        <Button color='primary' onClick={this.handleClickOpen}>Log Maintenance</Button>
-        <Dialog
-          fullScreen
-          open={this.state.open}
-          onClose={this.handleClose}
-          aria-labelledby="form-dialog-title"
-        >
-          <Grid container spacing={24}>
-          <Grid item xs={12}>
-            <AppBar className={classes.appBar}>
-            <Toolbar>
-              <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton>
-              <Typography variant="h6" color="inherit" className={classes.flex}>
-                Log Maintenance for {this.props.unitnumber}
-              </Typography>
-            </Toolbar>
-          </AppBar>
-        </Grid>
-          <Grid item xs={10}>
-            <Grid container spacing={24} className={classes.partsContainer}>
-              <Grid item xs={12}>
-                <Typography component="h2" variant="display1" gutterBottom>
-                  Valves & Seats
-                </Typography>
-              </Grid>
-              <Grid item className={this.props.classes.column} xs={2}>
-                {this.generateSection(vsLabels, "Parts", vsLabels, "packing")}
-              </Grid>
-              {holes.map((hole, index) => (
-                <Grid key={index} item xs={2}>
-                  {this.generateSection(vsLabels, hole)}
-                </Grid>
-              ))}
-              <Grid item xs={12}>
-                <Typography component="h2" variant="display1" gutterBottom>
-                  Packing
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                {this.generateSection(
-                  packingLabels,
-                  "Parts",
-                  packingLabels,
-                  "packing"
-                )}
-              </Grid>
-              {holes.map((hole, index) => (
-                <Grid key={index} item xs={2}>
-                  {this.generateSection(packingLabels, hole)}
-                </Grid>
-              ))}
-              <Grid item xs={6}>
-                <Grid container spacing={24}>
-                  <Grid item xs={6}>
-                    {this.generateSection(
-                      otherParts,
-                      "Parts",
-                      otherParts,
-                      "packing",
-                      "packing"
-                    )}
-                  </Grid>
-                  <Grid item xs={6}>
-                    {this.generateSection(
-                      otherParts,
-                      "Parts",
-                      otherParts,
-                      "text",
-                      "packing"
-                    )}
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={6}>
-                <Grid container spacing={24}>
-                  <Grid item xs={6}>
-                    {this.generateSection(
-                      otherPartsTwo,
-                      "Parts",
-                      otherPartsTwo,
-                      "packing",
-                      "packing"
-                    )}
-                  </Grid>
-                  <Grid item xs={6}>
-                    {this.generateSection(
-                      otherPartsTwo,
-                      "Parts",
-                      otherPartsTwo,
-                      "text",
-                      "packing"
-                    )}
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={2}>
+    <Mutation mutation={ADD_MAINTENANCE}>
+      {(addMaintenance, { data }) =>( 
+        <div className={classes.root}>
+          <Button color="primary" onClick={this.handleClickOpen}>
+            Log Maintenance
+          </Button>
+          <Dialog fullScreen open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
             <Grid container spacing={24}>
               <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={() => this.fullBuild()}
-                >
-                  Full Build
-                </Button>
+                <AppBar className={classes.appBar}>
+                  <Toolbar>
+                    <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
+                      <CloseIcon />
+                    </IconButton>
+                    <Typography variant="h6" color="inherit" className={classes.flex}>
+                      Log Maintenance for {this.props.unitnumber}
+                    </Typography>
+                  </Toolbar>
+                </AppBar>
               </Grid>
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={() => this.tops()}
-                >
-                  Tops
-                </Button>
-              </Grid>
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={() => this.bottoms()}
-                >
-                  Bottoms
-                </Button>
-              </Grid>
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={() => this.uncheck()}
-                >
-                  Uncheck All
-                </Button>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="h6" color="inherit" className={classes.flex}>
-                  Current Pump Hours: {this.props.current_pumphours}
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl className={classes.formControl}>
-                  <TextField
-                    margin="dense"
-                    id="pump_hours"
-                    label="Pump Hours"
-                    type="text"
-                    onChange={this.handleSelectChange('pump_hours')}
-                    value={this.state['pump_hours']}
-                  />
-                </FormControl>
-              </Grid>
-              {packingHoles.map((hole, index) => (
-                <Grid key={index} item xs={12}>
-                  <FormControl className={classes.formControl}>
-                    <TextField
-                      margin="dense"
-                      id={"grease_pressure" + String(hole)}
-                      label={"Grease Pressure Hole " + String(hole)}
-                      type="text"
-                      onChange={this.handleSelectChange(
-                        "grease_pressure" + String(hole)
-                      )}
-                      value={this.state["grease_pressure" + String(hole)]}
-                    />
-                  </FormControl>
+              <Grid item xs={10}>
+                <Grid container spacing={24} className={classes.partsContainer}>
+                  <Grid item xs={12}>
+                    <Typography component="h2" variant="display1" gutterBottom>
+                      Valves & Seats
+                    </Typography>
+                  </Grid>
+                  <Grid item className={this.props.classes.column} xs={2}>
+                    {this.generateSection(vsLabels, "Parts", vsLabels, "packing")}
+                  </Grid>
+                  {holes.map((hole, index) => <Grid key={index} item xs={2}>
+                      {this.generateSection(vsLabels, hole)}
+                    </Grid>)}
+                  <Grid item xs={12}>
+                    <Typography component="h2" variant="display1" gutterBottom>
+                      Packing
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={2}>
+                    {this.generateSection(packingLabels, "Parts", packingLabels, "packing")}
+                  </Grid>
+                  {holes.map((hole, index) => <Grid key={index} item xs={2}>
+                      {this.generateSection(packingLabels, hole)}
+                    </Grid>)}
+                  <Grid item xs={6}>
+                    <Grid container spacing={24}>
+                      <Grid item xs={6}>
+                        {this.generateSection(otherParts, "Parts", otherParts, "packing", "packing")}
+                      </Grid>
+                      <Grid item xs={6}>
+                        {this.generateSection(otherParts, "Parts", otherParts, "text", "packing")}
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Grid container spacing={24}>
+                      <Grid item xs={6}>
+                        {this.generateSection(otherPartsTwo, "Parts", otherPartsTwo, "packing", "packing")}
+                      </Grid>
+                      <Grid item xs={6}>
+                        {this.generateSection(otherPartsTwo, "Parts", otherPartsTwo, "text", "packing")}
+                      </Grid>
+                    </Grid>
+                  </Grid>
                 </Grid>
-              ))}
-              <Grid item xs={12}>
-                <FormControl className={classes.formControl}>
-                  <InputLabel htmlFor="treater">Supervisor Name</InputLabel>
-                  <Select
-                    native
-                    value={this.state.treater}
-                    onChange={this.handleSelectChange('treater')}
-                    input={<Input id="treater" />}
-                  >
-                    <option value="" />
-                    {this.props.treaters.treaters !== undefined ? ( this.props.treaters.treaters.map(treater =>
-                    <option key={treater.name} value={treater.name}>{treater.name}</option>
-                      ))
-                   : null}
-                  </Select>
-                </FormControl>
               </Grid>
+              <Grid item xs={2}>
+                <Grid container spacing={24}>
+                  <Grid item xs={12}>
+                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.fullBuild()}>
+                      Full Build
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.tops()}>
+                      Tops
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.bottoms()}>
+                      Bottoms
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.uncheck()}>
+                      Uncheck All
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="h6" color="inherit" className={classes.flex}>
+                      Current Pump Hours: {this.props.current_pumphours}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControl className={classes.formControl}>
+                      <TextField margin="dense" id="pump_hours" label="Pump Hours" type="text" onChange={this.handleSelectChange("pump_hours")} value={this.state["pump_hours"]} />
+                    </FormControl>
+                  </Grid>
+                  {packingHoles.map((hole, index) => (
+                    <Grid key={index} item xs={12}>
+                      <FormControl className={classes.formControl}>
+                        <TextField
+                          margin="dense"
+                          id={"grease_pressure" + String(hole)}
+                          label={"Grease Pressure Hole " + String(hole)}
+                          type="text"
+                          onChange={this.handleSelectChange(
+                            "grease_pressure" + String(hole)
+                          )}
+                          value={
+                            this.state["grease_pressure" + String(hole)]
+                          }
+                        />
+                      </FormControl>
+                    </Grid>
+                  ))}
+                  <Grid item xs={12}>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel htmlFor="treater">
+                        Supervisor Name
+                      </InputLabel>
+                      <Select native value={this.state.treater} onChange={this.handleSelectChange("treater")} input={<Input id="treater" />}>
+                        <option value="" />
+                        {this.props.treaters.treaters !== undefined ? this.props.treaters.treaters.map(
+                              treater => (
+                                <option
+                                  key={treater.name}
+                                  value={treater.name}
+                                >
+                                  {treater.name}
+                                </option>
+                              )
+                            ) : null}
+                      </Select>
+                    </FormControl>
+                  </Grid>
 
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={() => this.handleSubmit(error, errorType)}
-                >
-                  Submit Maintenance
-                </Button>
+                  <Grid item xs={12}>
+                    <Button variant="contained" color="primary" className={classes.button} onClick={() => {
+                      this.handleSubmit(error, errorType, addMaintenance)
+                      }}>
+                      Submit Maintenance
+                    </Button>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Grid>
-      </Dialog>
-      </div>
-    );
+          </Dialog>
+        </div>)}
+      </Mutation>);
   }
 }
 
