@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import Input from '@material-ui/core/Input';
 import { updateHours } from '../actions/pumps'
 import gql from "graphql-tag";
-import { Mutation } from "react-apollo"
+import { Mutation, Query } from "react-apollo"
 
 
 const styles = theme => ({
@@ -64,45 +64,75 @@ partsContainer: {
 });
 
 const ADD_MAINTENANCE = gql`
-mutation AddMaintenance (
-  $hole: String
-  ){
-	addMaintenance(maint_object: {
-    maint_type: "VS",
-    crew: "red",
-    treater: 14022,
-    unit_number: "53Q12222",
-    hole: $hole,
-    pump_hours: 500,
-    parts_used: {
-      suction_valves: 2,
-      suction_seats: 3
+  mutation AddMaintenance(
+    $hole: String
+    $crew: String
+    $treater: String
+    $unit_number: String
+    $pump_hours: Int
+    $parts_used: MaintParts
+    $hole_1_life: Int
+    $hole_2_life: Int
+    $hole_3_life: Int
+    $hole_4_life: Int
+    $hole_5_life: Int
+    $grease_pressure_1: Int
+    $grease_pressure_2: Int
+    $grease_pressure_3: Int
+    $grease_pressure_4: Int
+    $grease_pressure_5: Int
+  ) {
+    addMaintenance(
+      maint_object: {
+        crew: $crew
+        treater: $treater
+        unit_number: $unit_number
+        hole: $hole
+        pump_hours: $pump_hours
+        parts_used: $parts_used
+        hole_1_life: $hole_1_life
+        hole_2_life: $hole_2_life
+        hole_3_life: $hole_3_life
+        hole_4_life: $hole_4_life
+        hole_5_life: $hole_5_life
+        grease_pressure_1: $grease_pressure_1
+        grease_pressure_2: $grease_pressure_2
+        grease_pressure_3: $grease_pressure_3
+        grease_pressure_4: $grease_pressure_4
+        grease_pressure_5: $grease_pressure_5
+      }
+    ) {
+      id
+      timestamp
+      treater
+      unit_number
+      hole
+      pump_hours
+      hole_1_life
+      hole_2_life
+      hole_3_life
+      hole_4_life
+      hole_5_life
+      grease_pressure_1
+      grease_pressure_2
+      grease_pressure_3
+      grease_pressure_4
+      grease_pressure_5
+      parts_used {
+        suction_seats
+        discharge_seats
+      }
     }
-  }) {
-	  maint_type
-	  treater
-	  unit_number
-	  hole
-	  pump_hours
-	  hole_1_life_maint
-	  hole_2_life_maint
-	  hole_3_life_maint
-	  hole_4_life_maint
-	  hole_5_life
-	  grease_pressure_1
-	  grease_pressure_2
-	  grease_pressure_3
-	  grease_pressure_4
-	  grease_pressure_5
-    parts_used{
-      suction_seats
-      suction_spring
-      discharge_seats
-      discharge_spring
+  }
+`;
+
+const FIND_EMP_ID = gql`
+  query find_id($first_name: String, $last_name: String) {
+    findEmployeeById(first_name: $first_name, last_name: $last_name) {
+      emp_id
     }
-	}
-}
-`
+  }
+`;
 
 class MainForm extends React.Component {
   state = {
@@ -826,157 +856,159 @@ class MainForm extends React.Component {
     packingHoles = packingHoles.sort((a, b) => a - b);
 
 
-    return (
-    <Mutation mutation={ADD_MAINTENANCE}>
-      {(addMaintenance, { data }) =>( 
-        <div className={classes.root}>
-          <Button color="primary" onClick={this.handleClickOpen}>
-            Log Maintenance
-          </Button>
-          <Dialog fullScreen open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
-            <Grid container spacing={24}>
-              <Grid item xs={12}>
-                <AppBar className={classes.appBar}>
-                  <Toolbar>
-                    <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
-                      <CloseIcon />
-                    </IconButton>
-                    <Typography variant="h6" color="inherit" className={classes.flex}>
-                      Log Maintenance for {this.props.unitnumber}
-                    </Typography>
-                  </Toolbar>
-                </AppBar>
-              </Grid>
-              <Grid item xs={10}>
-                <Grid container spacing={24} className={classes.partsContainer}>
-                  <Grid item xs={12}>
-                    <Typography component="h2" variant="display1" gutterBottom>
-                      Valves & Seats
-                    </Typography>
-                  </Grid>
-                  <Grid item className={this.props.classes.column} xs={2}>
-                    {this.generateSection(vsLabels, "Parts", vsLabels, "packing")}
-                  </Grid>
-                  {holes.map((hole, index) => <Grid key={index} item xs={2}>
-                      {this.generateSection(vsLabels, hole)}
-                    </Grid>)}
-                  <Grid item xs={12}>
-                    <Typography component="h2" variant="display1" gutterBottom>
-                      Packing
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={2}>
-                    {this.generateSection(packingLabels, "Parts", packingLabels, "packing")}
-                  </Grid>
-                  {holes.map((hole, index) => <Grid key={index} item xs={2}>
-                      {this.generateSection(packingLabels, hole)}
-                    </Grid>)}
-                  <Grid item xs={6}>
-                    <Grid container spacing={24}>
-                      <Grid item xs={6}>
-                        {this.generateSection(otherParts, "Parts", otherParts, "packing", "packing")}
-                      </Grid>
-                      <Grid item xs={6}>
-                        {this.generateSection(otherParts, "Parts", otherParts, "text", "packing")}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Grid container spacing={24}>
-                      <Grid item xs={6}>
-                        {this.generateSection(otherPartsTwo, "Parts", otherPartsTwo, "packing", "packing")}
-                      </Grid>
-                      <Grid item xs={6}>
-                        {this.generateSection(otherPartsTwo, "Parts", otherPartsTwo, "text", "packing")}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={2}>
+    return <Mutation mutation={ADD_MAINTENANCE}>
+          {(addMaintenance, { data }) => <div className={classes.root}>
+              <Button color="primary" onClick={this.handleClickOpen}>
+                Log Maintenance
+              </Button>
+              <Dialog fullScreen open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
                 <Grid container spacing={24}>
                   <Grid item xs={12}>
-                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.fullBuild()}>
-                      Full Build
-                    </Button>
+                    <AppBar className={classes.appBar}>
+                      <Toolbar>
+                        <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
+                          <CloseIcon />
+                        </IconButton>
+                        <Typography variant="h6" color="inherit" className={classes.flex}>
+                          Log Maintenance for {this.props.unitnumber}
+                        </Typography>
+                      </Toolbar>
+                    </AppBar>
                   </Grid>
-                  <Grid item xs={12}>
-                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.tops()}>
-                      Tops
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.bottoms()}>
-                      Bottoms
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button variant="contained" color="primary" className={classes.button} onClick={() => this.uncheck()}>
-                      Uncheck All
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography variant="h6" color="inherit" className={classes.flex}>
-                      Current Pump Hours: {this.props.current_pumphours}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormControl className={classes.formControl}>
-                      <TextField margin="dense" id="pump_hours" label="Pump Hours" type="text" onChange={this.handleSelectChange("pump_hours")} value={this.state["pump_hours"]} />
-                    </FormControl>
-                  </Grid>
-                  {packingHoles.map((hole, index) => (
-                    <Grid key={index} item xs={12}>
-                      <FormControl className={classes.formControl}>
-                        <TextField
-                          margin="dense"
-                          id={"grease_pressure" + String(hole)}
-                          label={"Grease Pressure Hole " + String(hole)}
-                          type="text"
-                          onChange={this.handleSelectChange(
-                            "grease_pressure" + String(hole)
-                          )}
-                          value={
-                            this.state["grease_pressure" + String(hole)]
-                          }
-                        />
-                      </FormControl>
+                  <Grid item xs={10}>
+                    <Grid container spacing={24} className={classes.partsContainer}>
+                      <Grid item xs={12}>
+                        <Typography component="h2" variant="display1" gutterBottom>
+                          Valves & Seats
+                        </Typography>
+                      </Grid>
+                      <Grid item className={this.props.classes.column} xs={2}>
+                        {this.generateSection(vsLabels, "Parts", vsLabels, "packing")}
+                      </Grid>
+                      {holes.map((hole, index) => (
+                        <Grid key={index} item xs={2}>
+                          {this.generateSection(vsLabels, hole)}
+                        </Grid>
+                      ))}
+                      <Grid item xs={12}>
+                        <Typography component="h2" variant="display1" gutterBottom>
+                          Packing
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2}>
+                        {this.generateSection(packingLabels, "Parts", packingLabels, "packing")}
+                      </Grid>
+                      {holes.map((hole, index) => (
+                        <Grid key={index} item xs={2}>
+                          {this.generateSection(packingLabels, hole)}
+                        </Grid>
+                      ))}
+                      <Grid item xs={6}>
+                        <Grid container spacing={24}>
+                          <Grid item xs={6}>
+                            {this.generateSection(otherParts, "Parts", otherParts, "packing", "packing")}
+                          </Grid>
+                          <Grid item xs={6}>
+                            {this.generateSection(otherParts, "Parts", otherParts, "text", "packing")}
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Grid container spacing={24}>
+                          <Grid item xs={6}>
+                            {this.generateSection(otherPartsTwo, "Parts", otherPartsTwo, "packing", "packing")}
+                          </Grid>
+                          <Grid item xs={6}>
+                            {this.generateSection(otherPartsTwo, "Parts", otherPartsTwo, "text", "packing")}
+                          </Grid>
+                        </Grid>
+                      </Grid>
                     </Grid>
-                  ))}
-                  <Grid item xs={12}>
-                    <FormControl className={classes.formControl}>
-                      <InputLabel htmlFor="treater">
-                        Supervisor Name
-                      </InputLabel>
-                      <Select native value={this.state.treater} onChange={this.handleSelectChange("treater")} input={<Input id="treater" />}>
-                        <option value="" />
-                        {this.props.treaters.treaters !== undefined ? this.props.treaters.treaters.map(
-                              treater => (
-                                <option
-                                  key={treater.name}
-                                  value={treater.name}
-                                >
-                                  {treater.name}
-                                </option>
-                              )
-                            ) : null}
-                      </Select>
-                    </FormControl>
                   </Grid>
+                  <Grid item xs={2}>
+                    <Grid container spacing={24}>
+                      <Grid item xs={12}>
+                        <Button variant="contained" color="primary" className={classes.button} onClick={() => this.fullBuild()}>
+                          Full Build
+                        </Button>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button variant="contained" color="primary" className={classes.button} onClick={() => this.tops()}>
+                          Tops
+                        </Button>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button variant="contained" color="primary" className={classes.button} onClick={() => this.bottoms()}>
+                          Bottoms
+                        </Button>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button variant="contained" color="primary" className={classes.button} onClick={() => this.uncheck()}>
+                          Uncheck All
+                        </Button>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="h6" color="inherit" className={classes.flex}>
+                          Current Pump Hours: {this.props.current_pumphours}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <FormControl className={classes.formControl}>
+                          <TextField margin="dense" id="pump_hours" label="Pump Hours" type="text" onChange={this.handleSelectChange("pump_hours")} value={this.state["pump_hours"]} />
+                        </FormControl>
+                      </Grid>
+                      {packingHoles.map((hole, index) => (
+                        <Grid key={index} item xs={12}>
+                          <FormControl className={classes.formControl}>
+                            <TextField
+                              margin="dense"
+                              id={"grease_pressure" + String(hole)}
+                              label={"Grease Pressure Hole " + String(hole)}
+                              type="text"
+                              onChange={this.handleSelectChange(
+                                "grease_pressure" + String(hole)
+                              )}
+                              value={
+                                this.state["grease_pressure" + String(hole)]
+                              }
+                            />
+                          </FormControl>
+                        </Grid>
+                      ))}
+                      <Grid item xs={12}>
+                        <FormControl className={classes.formControl}>
+                          <InputLabel htmlFor="treater">
+                            Supervisor Name
+                          </InputLabel>
+                          <Select native value={this.state.treater} onChange={this.handleSelectChange("treater")} input={<Input id="treater" />}>
+                            <option value="" />
+                            {this.props.treaters.treaters !== undefined ? this.props.treaters.treaters.map(
+                                  treater => (
+                                    <option
+                                      key={treater.name}
+                                      value={treater.name}
+                                    >
+                                      {treater.name}
+                                    </option>
+                                  )
+                                ) : null}
+                          </Select>
+                        </FormControl>
+                      </Grid>
 
-                  <Grid item xs={12}>
-                    <Button variant="contained" color="primary" className={classes.button} onClick={() => {
-                      this.handleSubmit(error, errorType, addMaintenance)
-                      }}>
-                      Submit Maintenance
-                    </Button>
+                      <Grid item xs={12}>
+                        <Button variant="contained" color="primary" className={classes.button} onClick={(data) => {
+                            this.handleSubmit(error, errorType, addMaintenance);
+                          }}>
+                          Submit Maintenance
+                        </Button>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </Grid>
-          </Dialog>
-        </div>)}
-      </Mutation>);
+              </Dialog>
+            </div>}
+        </Mutation>;
   }
 }
 
